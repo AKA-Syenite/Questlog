@@ -1,21 +1,16 @@
 package shukaro.questlog.data;
 
 import com.google.gson.JsonObject;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 import shukaro.questlog.Questlog;
 
 import java.io.*;
-import java.nio.file.Files;
 
-public class BookData
+public class PlayerData
 {
     private JsonObject data;
     private File dataFile;
 
-    private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/bookData.json");
-
-    public BookData(File dataFile)
+    public PlayerData(File dataFile)
     {
         this.dataFile = dataFile;
         try
@@ -24,7 +19,7 @@ public class BookData
         }
         catch (IOException e)
         {
-            Questlog.logger.warn("Problem accessing book data file");
+            Questlog.logger.warn("Problem accessing player data file");
             e.printStackTrace();
         }
     }
@@ -33,7 +28,7 @@ public class BookData
     {
         if (!this.dataFile.exists())
         {
-            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), this.dataFile.toPath());
+            this.dataFile.createNewFile();
             data = new JsonObject();
         }
         else
@@ -42,9 +37,11 @@ public class BookData
 
     public void save() throws IOException
     {
-        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
-        out.write(data.toString());
-        out.close();
+        if (data != null)
+        {
+            BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+            out.write(data.toString());
+            out.close();
+        }
     }
-
 }

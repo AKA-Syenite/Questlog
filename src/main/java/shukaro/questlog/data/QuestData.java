@@ -1,18 +1,19 @@
 package shukaro.questlog.data;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 import shukaro.questlog.Questlog;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 
 public class QuestData
 {
-    private JsonArray data;
+    private JsonObject data;
     private File dataFile;
+
+    private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/questData.json");
 
     public QuestData(File dataFile)
     {
@@ -20,7 +21,6 @@ public class QuestData
         try
         {
             this.load();
-            this.save();
         }
         catch (IOException e)
         {
@@ -29,20 +29,22 @@ public class QuestData
         }
     }
 
-    public boolean load() throws IOException
+    public void load() throws IOException
     {
-        if (!this.dataFile.exists() && this.dataFile.createNewFile())
-            return true;
-        else if (this.dataFile.exists())
+        if (!this.dataFile.exists())
         {
-            return true;
+            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), this.dataFile.toPath());
+            data = new JsonObject();
         }
-        return false;
+        else
+            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(this.dataFile)), JsonObject.class);
     }
 
-    public boolean save() throws IOException
+    public void save() throws IOException
     {
-        return false;
+        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+        out.write(data.toString());
+        out.close();
     }
 
 }
