@@ -6,6 +6,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
+import shukaro.questlog.data.BookData;
+import shukaro.questlog.data.QuestData;
 import shukaro.questlog.net.CommonProxy;
 
 @Mod(modid = Questlog.modID, name = Questlog.modName, version = Questlog.modVersion,
@@ -21,6 +23,9 @@ public class Questlog
     public static final String modVersion = "0.1";
 
     public static Logger logger;
+
+    public static QuestData questData;
+    public static BookData bookData;
 
     @Mod.Instance(modID)
     public static Questlog instance;
