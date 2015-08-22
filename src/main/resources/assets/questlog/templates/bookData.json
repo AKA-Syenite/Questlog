@@ -2,11 +2,26 @@
   "pages": [
     {
       "uid": "main",
-      "quests": [
+      "nodes": [
         {
+          "type": "quest",
           "uid": "",
           "x": "",
           "y": "",
+          "parents": [
+            ""
+          ],
+          "tags": [
+            ""
+          ]
+        },
+        {
+          "type": "line",
+          "uid": "",
+          "x": "",
+          "y": "",
+          "x2": "",
+          "y2": "",
           "parents": [
             ""
           ],

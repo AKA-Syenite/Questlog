@@ -1,13 +1,7 @@
 package shukaro.questlog.net;
 
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.server.FMLServerHandler;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraft.world.storage.SaveHandlerMP;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import shukaro.questlog.QuestConfig;
 import shukaro.questlog.data.BookData;
@@ -22,7 +16,7 @@ public class CommonProxy
 {
     public void serverStarted(FMLServerStartedEvent evt)
     {
-        Questlog.playerData = new PlayerData(new File(MinecraftServer.getServer().worldServers[0].getSaveHandler().getWorldDirectory(), "playerQuestData.json"));
+        Questlog.playerData = new PlayerData(new File(MinecraftServer.getServer().worldServers[0].getSaveHandler().getWorldDirectory(), "questlogPlayerData.json"));
     }
 
     public void preInit(FMLPreInitializationEvent evt)

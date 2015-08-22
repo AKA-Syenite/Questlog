@@ -37,11 +37,8 @@ public class PlayerData
 
     public void save() throws IOException
     {
-        if (data != null)
-        {
-            BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
-            out.write(data.toString());
-            out.close();
-        }
+        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+        out.write(data.toString());
+        out.close();
     }
 }

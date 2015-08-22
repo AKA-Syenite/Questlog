@@ -1,6 +1,7 @@
 package shukaro.questlog;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -30,7 +31,9 @@ public class Questlog
     public static QuestData questData;
     public static BookData bookData;
     public static PlayerData playerData;
+
     public static Gson gson = new Gson();
+    public static JsonParser parser = new JsonParser();
 
     @Mod.Instance(modID)
     public static Questlog instance;
