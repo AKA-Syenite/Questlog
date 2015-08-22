@@ -1,6 +1,7 @@
 package shukaro.questlog.data;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -8,6 +9,7 @@ import shukaro.questlog.Questlog;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.util.ArrayList;
 
 public class QuestData
 {
@@ -52,10 +54,18 @@ public class QuestData
     {
         for (int i=0; i<data.size(); i++)
         {
-            if (data.get(i).getAsJsonObject().get("uid").toString().equals("uid"))
+            if (data.get(i).getAsJsonObject().get("uid").getAsString().equals("uid"))
                 return data.get(i).getAsJsonObject();
         }
         return null;
+    }
+
+    public ArrayList<String> getQuests()
+    {
+        ArrayList<String> out = new ArrayList<String>();
+        for (int i=0; i<data.size(); i++)
+            out.add(data.get(i).getAsJsonObject().get("uid").getAsString());
+        return out;
     }
 
     public boolean removeQuest(String uid)
@@ -77,9 +87,13 @@ public class QuestData
         return quest.getAsJsonArray("objectives");
     }
 
-    public JsonArray getQuestObjectives(String uid)
+    public ArrayList<String> getQuestObjectives(String uid)
     {
-        return getQuestObjectives(getQuest(uid));
+        JsonArray obj = getQuestObjectives(getQuest(uid));
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : obj)
+            out.add(e.getAsString());
+        return out;
     }
 
     protected void setQuestObjectives(JsonObject quest, JsonArray objectives)
@@ -98,9 +112,13 @@ public class QuestData
         return quest.getAsJsonArray("rewards");
     }
 
-    public JsonArray getQuestRewards(String uid)
+    public ArrayList<String> getQuestRewards(String uid)
     {
-        return getQuestRewards(getQuest(uid));
+        JsonArray obj = getQuestRewards(getQuest(uid));
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : obj)
+            out.add(e.getAsString());
+        return out;
     }
 
     protected void setQuestRewards(JsonObject quest, JsonArray rewards)
@@ -119,9 +137,13 @@ public class QuestData
         return quest.getAsJsonArray("tags");
     }
 
-    public JsonArray getQuestTags(String uid)
+    public ArrayList<String> getQuestTags(String uid)
     {
-        return getQuestTags(getQuest(uid));
+        JsonArray obj = getQuestTags(getQuest(uid));
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : obj)
+            out.add(e.getAsString());
+        return out;
     }
 
     protected void setQuestTags(JsonObject quest, JsonArray tags)
