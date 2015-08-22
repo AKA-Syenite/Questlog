@@ -60,7 +60,7 @@ public class QuestData
         return null;
     }
 
-    public ArrayList<String> getQuests()
+    public ArrayList<String> getQuestIDs()
     {
         ArrayList<String> out = new ArrayList<String>();
         for (int i=0; i<data.size(); i++)
