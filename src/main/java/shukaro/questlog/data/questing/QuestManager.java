@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class QuestManager
 {
     public static HashMap<UUID, ArrayList<AbstractObjective>> runningObjectives = new HashMap<UUID, ArrayList<AbstractObjective>>();
+
     public static HashMap<AbstractObjective, String> objectiveRegistry = new HashMap<AbstractObjective, String>();
     public static HashMap<AbstractReward, String> rewardRegistry = new HashMap<AbstractReward, String>();
 
@@ -75,15 +76,15 @@ public class QuestManager
         }
     }
 
-    public static void checkCompletion(EntityPlayer player, String questUID)
+    public static boolean isCompleted(EntityPlayer player, String questUID)
     {
-        checkCompletion(player.getPersistentID(), questUID);
+        return isCompleted(player.getPersistentID(), questUID);
     }
 
-    public static void checkCompletion(UUID player, String questUID)
+    public static boolean isCompleted(UUID player, String questUID)
     {
         if (!runningObjectives.keySet().contains(player))
-            return;
+            return false;
         ArrayList<AbstractObjective> objectives = new ArrayList<AbstractObjective>();
         for (AbstractObjective ao : runningObjectives.get(player))
         {
@@ -95,10 +96,16 @@ public class QuestManager
             for (AbstractObjective ao : objectives)
             {
                 if (!ao.isFulfilled)
-                    return;
+                    return false;
             }
-            giveRewards(player, questUID);
         }
+        return true;
+    }
+
+    public static void tryComplete(UUID player, String questUID)
+    {
+        if (isCompleted(player, questUID))
+            giveRewards(player, questUID);
     }
 
     public static void giveRewards(EntityPlayer player, String questUID)

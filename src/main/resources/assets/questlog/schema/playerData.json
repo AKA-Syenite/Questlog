@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "quests": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string"
+                },
+                "args": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "uid",
+                "args"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "uuid",
+          "quests"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "players"
+  ]
+}

@@ -20,4 +20,10 @@ public abstract class AbstractObjective
      * @return a new AbstractObjective instance
      */
     public abstract AbstractObjective start(String[] args);
+
+    /**
+     * Write out the current state of the objective to a string
+     * @return Args that can be passed into start(String[]) to resume quest tracking
+     */
+    public abstract String[] saveToStringArray();
 }
