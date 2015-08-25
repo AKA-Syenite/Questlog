@@ -13,17 +13,17 @@ import java.util.ArrayList;
 
 public class QuestData
 {
-    private JsonArray data;
-    private File dataFile;
+    private static JsonArray data;
+    private static File dataFile;
 
     private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/questData.json");
 
-    public QuestData(File dataFile)
+    public QuestData(File file)
     {
-        this.dataFile = dataFile;
+        dataFile = file;
         try
         {
-            this.load();
+            load();
         }
         catch (IOException e)
         {
@@ -32,25 +32,25 @@ public class QuestData
         }
     }
 
-    public void load() throws IOException
+    public static void load() throws IOException
     {
-        if (!this.dataFile.exists())
+        if (!dataFile.exists())
         {
-            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), this.dataFile.toPath());
+            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), dataFile.toPath());
             data = new JsonArray();
         }
         else
-            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(this.dataFile)), JsonObject.class).getAsJsonArray("quests");
+            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(dataFile)), JsonObject.class).getAsJsonArray("quests");
     }
 
-    public void save() throws IOException
+    public static void save() throws IOException
     {
-        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+        BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
         out.write(data.toString());
         out.close();
     }
 
-    public JsonObject getQuest(String uid)
+    public static JsonObject getQuest(String uid)
     {
         for (int i=0; i<data.size(); i++)
         {
@@ -60,7 +60,7 @@ public class QuestData
         return null;
     }
 
-    public ArrayList<String> getQuestIDs()
+    public static ArrayList<String> getQuestIDs()
     {
         ArrayList<String> out = new ArrayList<String>();
         for (int i=0; i<data.size(); i++)
@@ -68,7 +68,7 @@ public class QuestData
         return out;
     }
 
-    public boolean removeQuest(String uid)
+    public static boolean removeQuest(String uid)
     {
         JsonArray newArray = new JsonArray();
         for (int i=0; i<data.size(); i++)
@@ -78,16 +78,16 @@ public class QuestData
         }
         if (data.size() == newArray.size())
             return false;
-        this.data = newArray;
+        data = newArray;
         return true;
     }
 
-    protected JsonArray getQuestObjectives(JsonObject quest)
+    protected static JsonArray getQuestObjectives(JsonObject quest)
     {
         return quest.getAsJsonArray("objectives");
     }
 
-    public ArrayList<String> getQuestObjectives(String uid)
+    public static ArrayList<String> getQuestObjectives(String uid)
     {
         JsonArray obj = getQuestObjectives(getQuest(uid));
         ArrayList<String> out = new ArrayList<String>();
@@ -96,23 +96,23 @@ public class QuestData
         return out;
     }
 
-    protected void setQuestObjectives(JsonObject quest, JsonArray objectives)
+    protected static void setQuestObjectives(JsonObject quest, JsonArray objectives)
     {
         quest.remove("objectives");
         quest.add("objectives", objectives);
     }
 
-    public void setQuestObjectives(String uid, String[] objectives)
+    public static void setQuestObjectives(String uid, String[] objectives)
     {
         setQuestObjectives(getQuest(uid), Questlog.parser.parse(Questlog.gson.toJson(objectives)).getAsJsonArray());
     }
 
-    protected JsonArray getQuestRewards(JsonObject quest)
+    protected static JsonArray getQuestRewards(JsonObject quest)
     {
         return quest.getAsJsonArray("rewards");
     }
 
-    public ArrayList<String> getQuestRewards(String uid)
+    public static ArrayList<String> getQuestRewards(String uid)
     {
         JsonArray obj = getQuestRewards(getQuest(uid));
         ArrayList<String> out = new ArrayList<String>();
@@ -121,23 +121,23 @@ public class QuestData
         return out;
     }
 
-    protected void setQuestRewards(JsonObject quest, JsonArray rewards)
+    protected static void setQuestRewards(JsonObject quest, JsonArray rewards)
     {
         quest.remove("rewards");
         quest.add("rewards", rewards);
     }
 
-    public void setQuestRewards(String uid, String[] rewards)
+    public static void setQuestRewards(String uid, String[] rewards)
     {
         setQuestRewards(getQuest(uid), Questlog.parser.parse(Questlog.gson.toJson(rewards)).getAsJsonArray());
     }
 
-    protected JsonArray getQuestTags(JsonObject quest)
+    protected static JsonArray getQuestTags(JsonObject quest)
     {
         return quest.getAsJsonArray("tags");
     }
 
-    public ArrayList<String> getQuestTags(String uid)
+    public static ArrayList<String> getQuestTags(String uid)
     {
         JsonArray obj = getQuestTags(getQuest(uid));
         ArrayList<String> out = new ArrayList<String>();
@@ -146,13 +146,13 @@ public class QuestData
         return out;
     }
 
-    protected void setQuestTags(JsonObject quest, JsonArray tags)
+    protected static void setQuestTags(JsonObject quest, JsonArray tags)
     {
         quest.remove("tags");
         quest.add("tags", tags);
     }
 
-    public void setQuestTags(String uid, String[] tags)
+    public static void setQuestTags(String uid, String[] tags)
     {
         setQuestTags(getQuest(uid), Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
     }

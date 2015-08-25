@@ -14,17 +14,17 @@ import java.util.Locale;
 
 public class BookData
 {
-    private JsonArray data;
-    private File dataFile;
+    private static JsonArray data;
+    private static File dataFile;
 
     private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/bookData.json");
 
-    public BookData(File dataFile)
+    public BookData(File file)
     {
-        this.dataFile = dataFile;
+        dataFile = file;
         try
         {
-            this.load();
+            load();
         }
         catch (IOException e)
         {
@@ -33,25 +33,25 @@ public class BookData
         }
     }
 
-    public void load() throws IOException
+    public static void load() throws IOException
     {
-        if (!this.dataFile.exists())
+        if (!dataFile.exists())
         {
-            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), this.dataFile.toPath());
+            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), dataFile.toPath());
             data = new JsonArray();
         }
         else
-            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(this.dataFile)), JsonObject.class).getAsJsonArray("pages");
+            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(dataFile)), JsonObject.class).getAsJsonArray("pages");
     }
 
-    public void save() throws IOException
+    public static void save() throws IOException
     {
-        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+        BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
         out.write(data.toString());
         out.close();
     }
 
-    public JsonObject getPage(String uid)
+    public static JsonObject getPage(String uid)
     {
         for (int i=0; i<data.size(); i++)
         {
@@ -61,7 +61,7 @@ public class BookData
         return null;
     }
 
-    public ArrayList<String> getPages()
+    public static ArrayList<String> getPages()
     {
         ArrayList<String> out = new ArrayList<String>();
         for (int i=0; i<data.size(); i++)
@@ -69,7 +69,7 @@ public class BookData
         return out;
     }
 
-    public boolean removePage(String uid)
+    public static boolean removePage(String uid)
     {
         JsonArray newArray = new JsonArray();
         for (int i=0; i<data.size(); i++)
@@ -79,16 +79,16 @@ public class BookData
         }
         if (data.size() == newArray.size())
             return false;
-        this.data = newArray;
+        data = newArray;
         return true;
     }
 
-    protected JsonArray getPageNodes(JsonObject page)
+    protected static JsonArray getPageNodes(JsonObject page)
     {
         return page.getAsJsonArray("nodes");
     }
 
-    public ArrayList<String> getPageNodeIDs(String uid)
+    public static ArrayList<String> getPageNodeIDs(String uid)
     {
         JsonObject node = getPage(uid);
         ArrayList<String> out = new ArrayList<String>();
@@ -97,7 +97,7 @@ public class BookData
         return out;
     }
 
-    protected JsonObject getPageNode(JsonObject page, String uid)
+    protected static JsonObject getPageNode(JsonObject page, String uid)
     {
         for (JsonElement node : getPageNodes(page))
         {
@@ -107,62 +107,76 @@ public class BookData
         return null;
     }
 
-    public NodeTypes getTypeForNode(String pageUID, String nodeUID)
+    public static NodeTypes getTypeForNode(String pageUID, String nodeUID)
     {
         JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        return toNodeType(node.get("type").getAsString());
+        if (node != null)
+            return toNodeType(node.get("type").getAsString());
+        return null;
     }
 
-    public ArrayList<String> getNodeParents(String pageUID, String nodeUID)
+    public static ArrayList<String> getNodeParents(String pageUID, String nodeUID)
     {
         JsonObject node = getPageNode(getPage(pageUID), nodeUID);
         ArrayList<String> out = new ArrayList<String>();
-        JsonArray parents = node.get("parents").getAsJsonArray();
-        for (JsonElement e : parents)
-            out.add(e.getAsString());
-        return out;
-    }
-
-    public ArrayList<String> getNodeTags(String pageUID, String nodeUID)
-    {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        ArrayList<String> out = new ArrayList<String>();
-        JsonArray tags = node.get("tags").getAsJsonArray();
-        for (JsonElement e : tags)
-            out.add(e.getAsString());
-        return out;
-    }
-
-    public int[] getNodePos(String pageUID, String nodeUID)
-    {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        int[] pos = new int[2];
-        pos[0] = node.get("x").getAsInt();
-        pos[1] = node.get("y").getAsInt();
-        return pos;
-    }
-
-    public int[] getSecondaryPosForLineNode(String pageUID, String nodeUID)
-    {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        int[] pos = new int[2];
-        if (toNodeType(node.get("type").getAsString()) == NodeTypes.LINE)
+        if (node != null)
         {
-            pos[0] = node.get("x2").getAsInt();
-            pos[1] = node.get("y2").getAsInt();
+            JsonArray parents = node.get("parents").getAsJsonArray();
+            for (JsonElement e : parents)
+                out.add(e.getAsString());
+        }
+        return out;
+    }
+
+    public static ArrayList<String> getNodeTags(String pageUID, String nodeUID)
+    {
+        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        ArrayList<String> out = new ArrayList<String>();
+        if (node != null)
+        {
+            JsonArray tags = node.get("tags").getAsJsonArray();
+            for (JsonElement e : tags)
+                out.add(e.getAsString());
+        }
+        return out;
+    }
+
+    public static int[] getNodePos(String pageUID, String nodeUID)
+    {
+        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        int[] pos = new int[2];
+        if (node != null)
+        {
+            pos[0] = node.get("x").getAsInt();
+            pos[1] = node.get("y").getAsInt();
         }
         return pos;
     }
 
-    public String getTargetForPageNode(String pageUID, String nodeUID)
+    public static int[] getSecondaryPosForLineNode(String pageUID, String nodeUID)
     {
         JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        if (toNodeType(node.get("type").getAsString()) == NodeTypes.PAGE)
+        int[] pos = new int[2];
+        if (node != null)
+        {
+            if (toNodeType(node.get("type").getAsString()) == NodeTypes.LINE)
+            {
+                pos[0] = node.get("x2").getAsInt();
+                pos[1] = node.get("y2").getAsInt();
+            }
+        }
+        return pos;
+    }
+
+    public static String getTargetForPageNode(String pageUID, String nodeUID)
+    {
+        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        if (node != null && toNodeType(node.get("type").getAsString()) == NodeTypes.PAGE)
             return node.get("target").getAsString();
         return "";
     }
 
-    public NodeTypes toNodeType(String type)
+    public static NodeTypes toNodeType(String type)
     {
         if (type.toLowerCase(Locale.ENGLISH).equals("quest"))
             return NodeTypes.QUEST;
