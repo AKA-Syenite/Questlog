@@ -27,7 +27,14 @@ public class QuestManager
         if (!runningObjectives.keySet().contains(player))
             runningObjectives.put(player, new ArrayList<AbstractObjective>());
         for (String obj : objectives)
-            runningObjectives.get(player).add(startObjective(obj));
+        {
+            AbstractObjective ao = startObjective(obj);
+            if (ao != null)
+            {
+                ao.parentQuest = questUID;
+                runningObjectives.get(player).add(ao);
+            }
+        }
     }
 
     public static AbstractObjective startObjective(String obj)
@@ -43,7 +50,9 @@ public class QuestManager
                 for (Map.Entry<AbstractObjective, String> e : objectiveRegistry.entrySet())
                 {
                     if (e.getValue().equals(objectiveType))
+                    {
                         return e.getKey().start(objectiveArgs);
+                    }
                 }
             }
         }

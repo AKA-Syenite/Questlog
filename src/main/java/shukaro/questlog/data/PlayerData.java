@@ -13,15 +13,16 @@ import java.util.UUID;
 
 public class PlayerData
 {
-    private JsonObject data;
-    private File dataFile;
+    private static JsonObject data;
+    private static File dataFile;
 
-    public PlayerData(File dataFile)
+    public PlayerData(File file)
     {
-        this.dataFile = dataFile;
+        dataFile = file;
         try
         {
-            this.load();
+            load();
+            validate();
         }
         catch (IOException e)
         {
@@ -30,31 +31,36 @@ public class PlayerData
         }
     }
 
-    public void load() throws IOException
+    public static void validate()
     {
-        if (!this.dataFile.exists())
+
+    }
+
+    public static void load() throws IOException
+    {
+        if (!dataFile.exists())
         {
-            this.dataFile.createNewFile();
+            dataFile.createNewFile();
             data = new JsonObject();
             data.add("players", new JsonArray());
         }
         else
-            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(this.dataFile)), JsonObject.class);
+            data = Questlog.gson.fromJson(new BufferedReader(new FileReader(dataFile)), JsonObject.class);
     }
 
-    public void save() throws IOException
+    public static void save() throws IOException
     {
-        BufferedWriter out = new BufferedWriter(new FileWriter(this.dataFile));
+        BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
         out.write(data.toString());
         out.close();
     }
 
-    public void giveQuest(EntityPlayer player, String questUID)
+    public static void giveQuest(EntityPlayer player, String questUID)
     {
         giveQuest(player.getPersistentID(), questUID);
     }
 
-    public void giveQuest(UUID uuid, String questUID)
+    public static void giveQuest(UUID uuid, String questUID)
     {
         Iterator<JsonElement> playerIT = data.getAsJsonArray("players").iterator();
         boolean uuidExists = false;
@@ -89,12 +95,12 @@ public class PlayerData
         player.getAsJsonArray("quests").add(questTemplate);
     }
 
-    public void removeQuest(EntityPlayer player, String questUID)
+    public static void removeQuest(EntityPlayer player, String questUID)
     {
         removeQuest(player.getPersistentID(), questUID);
     }
 
-    public void removeQuest(UUID uuid, String questUID)
+    public static void removeQuest(UUID uuid, String questUID)
     {
         Iterator<JsonElement> playerIT = data.getAsJsonArray("players").iterator();
         boolean uuidExists = false;

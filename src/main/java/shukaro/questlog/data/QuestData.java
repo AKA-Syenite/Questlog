@@ -1,5 +1,11 @@
 package shukaro.questlog.data;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonNodeReader;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.examples.Utils;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +16,7 @@ import shukaro.questlog.Questlog;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class QuestData
 {
@@ -17,6 +24,7 @@ public class QuestData
     private static File dataFile;
 
     private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/questData.json");
+    private static ResourceLocation schemaFile = new ResourceLocation("questlog:schema/questData.json");
 
     public QuestData(File file)
     {
@@ -24,12 +32,31 @@ public class QuestData
         try
         {
             load();
+            validate();
         }
         catch (IOException e)
         {
             Questlog.logger.warn("Problem accessing quest data file");
             e.printStackTrace();
         }
+    }
+
+    public static void validate() throws IOException
+    {
+        Questlog.logger.info("Validating quest data");
+        JsonNode schema = new JsonNodeReader().fromInputStream(Minecraft.getMinecraft().getResourceManager().getResource(schemaFile).getInputStream());
+        JsonNode json = new JsonNodeReader().fromReader(new BufferedReader(new FileReader(dataFile)));
+        ProcessingReport report = JsonSchemaFactory.byDefault().getValidator().validateUnchecked(schema, json);
+        if (!report.isSuccess())
+        {
+            Iterator<ProcessingMessage> pit = report.iterator();
+            while (pit.hasNext())
+                Questlog.logger.warn(pit.next().toString());
+            Questlog.logger.warn("Quest data json was invalid, aborting");
+            data = new JsonArray();
+        }
+        else
+            Questlog.logger.info("Sucessfully validated quest data");
     }
 
     public static void load() throws IOException

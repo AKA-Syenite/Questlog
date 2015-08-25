@@ -1,5 +1,10 @@
 package shukaro.questlog.data;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jackson.JsonNodeReader;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +15,7 @@ import shukaro.questlog.Questlog;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Locale;
 
 public class BookData
@@ -18,6 +24,7 @@ public class BookData
     private static File dataFile;
 
     private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/bookData.json");
+    private static ResourceLocation schemaFile = new ResourceLocation("questlog:schema/bookData.json");
 
     public BookData(File file)
     {
@@ -25,12 +32,31 @@ public class BookData
         try
         {
             load();
+            validate();
         }
         catch (IOException e)
         {
             Questlog.logger.warn("Problem accessing book data file");
             e.printStackTrace();
         }
+    }
+
+    public static void validate() throws IOException
+    {
+        Questlog.logger.info("Validating book data");
+        JsonNode schema = new JsonNodeReader().fromInputStream(Minecraft.getMinecraft().getResourceManager().getResource(schemaFile).getInputStream());
+        JsonNode json = new JsonNodeReader().fromReader(new BufferedReader(new FileReader(dataFile)));
+        ProcessingReport report = JsonSchemaFactory.byDefault().getValidator().validateUnchecked(schema, json);
+        if (!report.isSuccess())
+        {
+            Iterator<ProcessingMessage> pit = report.iterator();
+            while (pit.hasNext())
+                Questlog.logger.warn(pit.next().toString());
+            Questlog.logger.warn("Book data json was invalid, aborting");
+            data = new JsonArray();
+        }
+        else
+            Questlog.logger.info("Sucessfully validated book data");
     }
 
     public static void load() throws IOException
@@ -85,15 +111,19 @@ public class BookData
 
     protected static JsonArray getPageNodes(JsonObject page)
     {
-        return page.getAsJsonArray("nodes");
+        JsonArray temp = new JsonArray();
+        temp.addAll(page.getAsJsonArray("questNodes"));
+        temp.addAll(page.getAsJsonArray("lineNodes"));
+        temp.addAll(page.getAsJsonArray("pageNodes"));
+        return temp;
     }
 
-    public static ArrayList<String> getPageNodeIDs(String uid)
+    public static ArrayList<String> getPageNodeIDs(String pageUID)
     {
-        JsonObject node = getPage(uid);
+        JsonObject node = getPage(pageUID);
         ArrayList<String> out = new ArrayList<String>();
         for (JsonElement e : getPageNodes(node))
-            out.add(e.getAsString());
+            out.add(((JsonObject)e).get("uid").getAsString());
         return out;
     }
 
@@ -104,14 +134,6 @@ public class BookData
             if (node.getAsJsonObject().get("uid").getAsString().equals(uid))
                 return node.getAsJsonObject();
         }
-        return null;
-    }
-
-    public static NodeTypes getTypeForNode(String pageUID, String nodeUID)
-    {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        if (node != null)
-            return toNodeType(node.get("type").getAsString());
         return null;
     }
 
@@ -157,13 +179,10 @@ public class BookData
     {
         JsonObject node = getPageNode(getPage(pageUID), nodeUID);
         int[] pos = new int[2];
-        if (node != null)
+        if (node != null && node.has("x2"))
         {
-            if (toNodeType(node.get("type").getAsString()) == NodeTypes.LINE)
-            {
-                pos[0] = node.get("x2").getAsInt();
-                pos[1] = node.get("y2").getAsInt();
-            }
+            pos[0] = node.get("x2").getAsInt();
+            pos[1] = node.get("y2").getAsInt();
         }
         return pos;
     }
@@ -171,25 +190,8 @@ public class BookData
     public static String getTargetForPageNode(String pageUID, String nodeUID)
     {
         JsonObject node = getPageNode(getPage(pageUID), nodeUID);
-        if (node != null && toNodeType(node.get("type").getAsString()) == NodeTypes.PAGE)
+        if (node != null && node.has("target"))
             return node.get("target").getAsString();
         return "";
-    }
-
-    public static NodeTypes toNodeType(String type)
-    {
-        if (type.toLowerCase(Locale.ENGLISH).equals("quest"))
-            return NodeTypes.QUEST;
-        else if (type.toLowerCase(Locale.ENGLISH).equals("line"))
-            return NodeTypes.LINE;
-        else if (type.toLowerCase(Locale.ENGLISH).equals("page"))
-            return NodeTypes.PAGE;
-        else
-            return NodeTypes.UNKNOWN;
-    }
-
-    public enum NodeTypes
-    {
-        QUEST, LINE, PAGE, UNKNOWN;
     }
 }

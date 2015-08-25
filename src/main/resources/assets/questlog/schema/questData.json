@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "quests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "id": "uid",
+            "type": "string"
+          },
+          "objectives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rewards": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "uid",
+          "objectives",
+          "rewards",
+          "tags"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "quests"
+  ]
+}

@@ -2,26 +2,40 @@
   "pages": [
     {
       "uid": "main",
-      "nodes": [
+      "questNodes": [
         {
-          "type": "quest",
           "uid": "",
-          "x": "",
-          "y": "",
+          "x": 0,
+          "y": 0,
           "parents": [
             ""
           ],
           "tags": [
             ""
           ]
-        },
+        }
+      ],
+      "lineNodes": [
         {
-          "type": "line",
           "uid": "",
-          "x": "",
-          "y": "",
-          "x2": "",
-          "y2": "",
+          "x": 0,
+          "y": 0,
+          "x2": 0,
+          "y2": 0,
+          "parents": [
+            ""
+          ],
+          "tags": [
+            ""
+          ]
+        }
+      ],
+      "pageNodes": [
+        {
+          "uid": "",
+          "x": 0,
+          "y": 0,
+          "target": "",
           "parents": [
             ""
           ],
