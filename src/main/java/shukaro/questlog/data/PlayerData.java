@@ -104,6 +104,7 @@ public class PlayerData
         {
             JsonObject newPlayer = new JsonObject();
             newPlayer.add("uuid", new JsonPrimitive(playerUUID.toString()));
+            newPlayer.add("groups", new JsonArray());
             newPlayer.add("quests", new JsonArray());
             data.add(newPlayer);
             player = newPlayer;
@@ -222,6 +223,65 @@ public class PlayerData
                 quest.remove("complete");
                 quest.add("complete", new JsonPrimitive(complete ? "true" : "false"));
             }
+        }
+    }
+
+    public static String[] getPlayerGroups(UUID playerUUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        String[] out = null;
+        int numGroups = player.getAsJsonArray("groups").size();
+        if (numGroups > 0)
+        {
+            out = new String[numGroups];
+            int i = 0;
+            for (JsonElement e : player.getAsJsonArray("groups"))
+            {
+                out[i] = player.getAsJsonArray("groups").get(i).getAsString();
+                i++;
+            }
+        }
+        return out;
+    }
+
+    public static boolean isPlayerInGroup(UUID playerUUID, String groupUID)
+    {
+        String[] groups = getPlayerGroups(playerUUID);
+        for (String s : groups)
+        {
+            if (s.equals(groupUID))
+                return true;
+        }
+        return false;
+    }
+
+    public static void addPlayerToGroup(UUID playerUUID, String groupUID)
+    {
+        if (!isPlayerInGroup(playerUUID, groupUID))
+        {
+            JsonObject player = getPlayerData(playerUUID);
+            player.getAsJsonArray("groups").add(new JsonPrimitive(groupUID));
+        }
+    }
+
+    public static void removePlayerFromGroup(UUID playerUUID, String groupUID)
+    {
+        if (isPlayerInGroup(playerUUID, groupUID))
+        {
+            JsonObject player = getPlayerData(playerUUID);
+            String[] groups = getPlayerGroups(playerUUID);
+            String[] newGroups = new String[groups.length-1];
+            int i = 0;
+            for (String s : groups)
+            {
+                if (!s.equals(groupUID))
+                {
+                    newGroups[i] = s;
+                    i++;
+                }
+            }
+            player.remove("groups");
+            player.add("groups", Questlog.parser.parse(Questlog.gson.toJson(newGroups)).getAsJsonArray());
         }
     }
 }

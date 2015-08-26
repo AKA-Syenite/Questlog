@@ -10,8 +10,11 @@
           "uuid": {
             "type": "string"
           },
-          "complete": {
-            "type": "string"
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "quests": {
             "type": "array",
@@ -19,6 +22,9 @@
               "type": "object",
               "properties": {
                 "uid": {
+                  "type": "string"
+                },
+                "complete": {
                   "type": "string"
                 },
                 "args": {
@@ -31,6 +37,7 @@
               "additionalProperties": false,
               "required": [
                 "uid",
+                "complete",
                 "args"
               ]
             }
@@ -39,7 +46,7 @@
         "additionalProperties": false,
         "required": [
           "uuid",
-          "complete",
+          "groups",
           "quests"
         ]
       }

@@ -14,6 +14,11 @@ import java.io.File;
 
 public class CommonProxy
 {
+    public void serverStarting(FMLServerStartingEvent evt)
+    {
+
+    }
+
     public void serverStarted(FMLServerStartedEvent evt)
     {
         PlayerData.init(new File(MinecraftServer.getServer().worldServers[0].getSaveHandler().getWorldDirectory(), "questlogPlayerData.json"));

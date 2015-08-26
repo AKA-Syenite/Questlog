@@ -1,13 +1,16 @@
 package shukaro.questlog.net;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.*;
 import shukaro.questlog.QuestConfig;
 
 public class ClientProxy extends CommonProxy
 {
+    @Override
+    public void serverStarting(FMLServerStartingEvent evt)
+    {
+        super.serverStarting(evt);
+    }
+
     @Override
     public void serverStarted(FMLServerStartedEvent evt)
     {

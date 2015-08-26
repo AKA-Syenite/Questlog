@@ -6,13 +6,10 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import org.apache.logging.log4j.Logger;
-import shukaro.questlog.data.BookData;
-import shukaro.questlog.data.PlayerData;
-import shukaro.questlog.data.QuestData;
 import shukaro.questlog.net.CommonProxy;
 
 @Mod(modid = Questlog.modID, name = Questlog.modName, version = Questlog.modVersion,
-        dependencies = "")
+        dependencies = "required-after:CoFHCore")
 public class Questlog
 {
     @SidedProxy(clientSide = "shukaro.questlog.net.ClientProxy", serverSide = "shukaro.questlog.net.CommonProxy")
@@ -34,7 +31,7 @@ public class Questlog
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent evt)
     {
-
+        proxy.serverStarting(evt);
     }
 
     @Mod.EventHandler
