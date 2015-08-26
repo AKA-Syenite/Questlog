@@ -33,7 +33,10 @@
                 "complete": {
                   "type": "string"
                 },
-                "args": {
+                "tracked": {
+                  "type": "string"
+                },
+                "objectiveArgs": {
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -44,7 +47,8 @@
               "required": [
                 "uid",
                 "complete",
-                "args"
+                "tracked",
+                "objectiveArgs"
               ]
             }
           }
@@ -53,6 +57,7 @@
         "required": [
           "uuid",
           "groups",
+          "leading",
           "quests"
         ]
       }

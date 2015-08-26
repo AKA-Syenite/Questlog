@@ -36,6 +36,7 @@ public class PlayerData
         {
             load();
             validate();
+            instantiateAllObjectives();
         }
         catch (IOException e)
         {
@@ -81,13 +82,23 @@ public class PlayerData
         for (Map.Entry<UUID, ArrayList<AbstractObjective>> entry : QuestManager.runningObjectives.entrySet())
         {
             for (AbstractObjective obj : entry.getValue())
-            {
-                updateQuestArgs(entry.getKey(), obj.parentQuest, obj.saveToStringArray());
-            }
+                updateObjectiveArgs(entry.getKey(), obj.parentQuest, obj.saveToStringArray());
         }
         jo.add("players", data);
         out.write(jo.toString());
         out.close();
+    }
+
+    public static void instantiateAllObjectives()
+    {
+        Iterator<JsonElement> playerIT = data.iterator();
+        while (playerIT.hasNext())
+        {
+            JsonObject player = (JsonObject)playerIT.next();
+            UUID playerUUID = UUID.fromString(player.get("uuid").getAsString());
+            for (String questUID : getQuestIDs(playerUUID))
+                QuestManager.instantiateObjectives(playerUUID, questUID);
+        }
     }
 
     public static JsonObject getPlayerData(UUID playerUUID)
@@ -116,7 +127,6 @@ public class PlayerData
     public static void giveQuest(UUID uuid, String questUID)
     {
         JsonObject player = getPlayerData(uuid);
-        JsonObject questTemplate = QuestData.getQuest(questUID);
         JsonObject quest = null;
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
         while (questIT.hasNext())
@@ -128,7 +138,8 @@ public class PlayerData
         JsonObject newQuest = new JsonObject();
         newQuest.add("uid", new JsonPrimitive(questUID));
         newQuest.add("complete", new JsonPrimitive("false"));
-        newQuest.add("questArgs", new JsonArray());
+        newQuest.add("tracked", new JsonPrimitive("false"));
+        newQuest.add("objectiveArgs", new JsonArray());
         player.getAsJsonArray("quests").add(newQuest);
         QuestManager.instantiateObjectives(uuid, questUID);
     }
@@ -159,7 +170,12 @@ public class PlayerData
         return out;
     }
 
-    public static String[] getQuestArgs(UUID playerUUID, String questUID)
+    public static boolean playerHasQuest(UUID playerUUID, String questUID)
+    {
+        return getQuestIDs(playerUUID).contains(questUID);
+    }
+
+    public static String[] getObjectiveArgs(UUID playerUUID, String questUID)
     {
         JsonObject player = getPlayerData(playerUUID);
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
@@ -168,17 +184,17 @@ public class PlayerData
         while (questIT.hasNext())
         {
             quest = questIT.next().getAsJsonObject();
-            if (quest.get("uid").getAsString().equals(questUID) && quest.getAsJsonArray("args").size() > 0)
+            if (quest.get("uid").getAsString().equals(questUID) && quest.getAsJsonArray("objectiveArgs").size() > 0)
             {
-                out = new String[quest.getAsJsonArray("args").size()];
+                out = new String[quest.getAsJsonArray("objectiveArgs").size()];
                 for (int i=0; i<out.length; i++)
-                    out[i] = quest.getAsJsonArray("args").get(i).getAsString();
+                    out[i] = quest.getAsJsonArray("objectiveArgs").get(i).getAsString();
             }
         }
         return out;
     }
 
-    public static void updateQuestArgs(UUID playerUUID, String questUID, String[] args)
+    public static void updateObjectiveArgs(UUID playerUUID, String questUID, String[] args)
     {
         JsonObject player = getPlayerData(playerUUID);
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
@@ -188,11 +204,55 @@ public class PlayerData
             quest = questIT.next().getAsJsonObject();
             if (quest.get("uid").getAsString().equals(questUID))
             {
-                quest.remove("args");
+                quest.remove("objectiveArgs");
                 JsonArray newArgs = new JsonArray();
                 for (String s : args)
                     newArgs.add(new JsonPrimitive(s));
-                quest.add("args", newArgs);
+                quest.add("objectiveArgs", newArgs);
+            }
+        }
+    }
+
+    public static boolean isTrackingQuest(UUID playerUUID, String questUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
+        JsonObject quest = null;
+        while (questIT.hasNext())
+        {
+            quest = questIT.next().getAsJsonObject();
+            if (quest.get("uid").getAsString().equals(questUID))
+                return quest.get("tracked").getAsString().equals("true");
+        }
+        return false;
+    }
+
+    public static ArrayList<String> getTrackedQuests(UUID playerUUID)
+    {
+        ArrayList<String> tracked = new ArrayList<String>();
+        for (String questUID : getQuestIDs(playerUUID))
+        {
+            if (isTrackingQuest(playerUUID, questUID))
+                tracked.add(questUID);
+        }
+        return tracked;
+    }
+
+    public static void setTrackingQuest(UUID playerUUID, String questUID, boolean tracked)
+    {
+        if (playerHasQuest(playerUUID, questUID))
+        {
+            JsonObject player = getPlayerData(playerUUID);
+            Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
+            JsonObject quest = null;
+            while (questIT.hasNext())
+            {
+                quest = questIT.next().getAsJsonObject();
+                if (quest.get("uid").getAsString().equals(questUID))
+                {
+                    quest.remove("tracked");
+                    quest.add("tracked", new JsonPrimitive(tracked));
+                }
             }
         }
     }

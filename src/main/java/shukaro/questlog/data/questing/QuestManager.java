@@ -1,13 +1,11 @@
 package shukaro.questlog.data.questing;
 
+import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,18 +16,21 @@ public class QuestManager
     public static HashMap<AbstractObjective, String> objectiveRegistry = new HashMap<AbstractObjective, String>();
     public static HashMap<AbstractReward, String> rewardRegistry = new HashMap<AbstractReward, String>();
 
-    public static void instantiateObjectives(UUID player, String questUID)
+    public static void instantiateObjectives(UUID playerUUID, String questUID)
     {
-        ArrayList<String> objectives = QuestData.getQuestObjectives(questUID);
-        if (!runningObjectives.keySet().contains(player))
-            runningObjectives.put(player, new ArrayList<AbstractObjective>());
-        for (String obj : objectives)
+        JsonObject player = PlayerData.getPlayerData(playerUUID);
+        ArrayList<String> objectiveArgs = new ArrayList<String>(Arrays.asList(PlayerData.getObjectiveArgs(playerUUID, questUID)));
+        if (objectiveArgs.size() == 0 || (objectiveArgs.size() == 1 && objectiveArgs.get(0).equals("")))
+            objectiveArgs = QuestData.getQuestObjectives(questUID);
+        if (!runningObjectives.keySet().contains(playerUUID))
+            runningObjectives.put(playerUUID, new ArrayList<AbstractObjective>());
+        for (String obj : objectiveArgs)
         {
             AbstractObjective ao = startObjective(obj);
             if (ao != null)
             {
                 ao.parentQuest = questUID;
-                runningObjectives.get(player).add(ao);
+                runningObjectives.get(playerUUID).add(ao);
             }
         }
     }
