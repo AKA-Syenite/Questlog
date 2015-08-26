@@ -9,13 +9,23 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Courtesy of CoFHCore's command implementation
+ *
+ * Permission Levels
+ * -1 = everyone
+ * 0 = everyone(?)
+ * 1 = authed people(maybe?)
+ * 2 = op
+ * 3 = server admin(maybe?)
+ * 4 = ???
  */
 public class CommandHandler extends CommandBase
 {
@@ -28,6 +38,7 @@ public class CommandHandler extends CommandBase
         registerSubCommand(new CommandVersion());
         registerSubCommand(new CommandHelp());
         registerSubCommand(new CommandSyntax());
+        registerSubCommand(new CommandNewQuest());
     }
 
     public static boolean registerSubCommand(ISubCommand subCommand)

@@ -72,7 +72,9 @@ public class BookData
     public static void save() throws IOException
     {
         BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
-        out.write(data.toString());
+        JsonObject temp = new JsonObject();
+        temp.add("pages", data);
+        out.write(temp.toString());
         out.close();
     }
 

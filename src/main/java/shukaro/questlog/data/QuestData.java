@@ -8,6 +8,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import shukaro.questlog.Questlog;
@@ -72,7 +73,9 @@ public class QuestData
     public static void save() throws IOException
     {
         BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
-        out.write(data.toString());
+        JsonObject temp = new JsonObject();
+        temp.add("quests", data);
+        out.write(temp.toString());
         out.close();
     }
 
@@ -106,6 +109,24 @@ public class QuestData
             return false;
         data = newArray;
         return true;
+    }
+
+    public static void createQuest(String questUID, String[] objectives, String[] rewards, String[] tags)
+    {
+        JsonObject quest = new JsonObject();
+        quest.add("uid", new JsonPrimitive(questUID));
+        quest.add("objectives", Questlog.parser.parse(Questlog.gson.toJson(objectives)).getAsJsonArray());
+        quest.add("rewards", Questlog.parser.parse(Questlog.gson.toJson(rewards)).getAsJsonArray());
+        quest.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
+        data.add(quest);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     protected static JsonArray getQuestObjectives(JsonObject quest)

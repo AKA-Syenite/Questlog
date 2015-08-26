@@ -58,12 +58,6 @@ public class CommandHelp implements ISubCommand
                 // FIXME: properly format this such that commands are clickable for auto-fill. paginate?
                 sender.addChatMessage(new ChatComponentText(output.toString()));
                 break;
-            case 2:
-                String commandName = arguments[1];
-                if (!CommandHandler.getCommandExists(commandName))
-                    throw new CommandNotFoundException("command.questlog.notFound");
-                sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog." + commandName)));
-                break;
             default:
                 throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
         }

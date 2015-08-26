@@ -44,7 +44,8 @@ public class CommandSyntax implements ISubCommand
                     String name = commandList.get(i);
                     if (CommandHandler.canUseCommand(sender, CommandHandler.getCommandPermission(name), name))
                     {
-                        output.append("/questlog " + StringHelper.YELLOW + commandList.get(i) + StringHelper.WHITE + ", ");
+                        String temp = StringHelper.localize("command.questlog." + name + ".syntax");
+                        output.append(temp.substring(0, 9) + " " + StringHelper.YELLOW + temp.substring(10) + StringHelper.WHITE + ", ");
                         commands++;
                     }
                 }
@@ -55,7 +56,8 @@ public class CommandSyntax implements ISubCommand
                 {
                     if (commands > 0)
                         output.append(" " + StringHelper.localize("command.questlog.and") + " ");
-                    output.append("/questlog " + StringHelper.YELLOW + name + StringHelper.WHITE + ".");
+                    String temp = StringHelper.localize("command.questlog." + name + ".syntax");
+                    output.append(temp.substring(0, 9) + " " + StringHelper.YELLOW + temp.substring(10) + StringHelper.WHITE + ".");
                 }
                 // FIXME: properly format this such that commands are clickable for auto-fill. paginate?
                 sender.addChatMessage(new ChatComponentText(output.toString()));
