@@ -4,6 +4,7 @@ import cpw.mods.fml.common.event.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import shukaro.questlog.QuestConfig;
+import shukaro.questlog.command.CommandHandler;
 import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
@@ -16,7 +17,7 @@ public class CommonProxy
 {
     public void serverStarting(FMLServerStartingEvent evt)
     {
-
+        evt.registerServerCommand(new CommandHandler());
     }
 
     public void serverStarted(FMLServerStartedEvent evt)
@@ -27,6 +28,7 @@ public class CommonProxy
     public void preInit(FMLPreInitializationEvent evt)
     {
         Questlog.logger = evt.getModLog();
+        Questlog.version = evt.getModMetadata().version;
         QuestConfig.initCommon(evt);
         QuestData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "questData.json"));
         BookData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "bookData.json"));

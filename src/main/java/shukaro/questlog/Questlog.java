@@ -3,22 +3,20 @@ package shukaro.questlog;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
 import org.apache.logging.log4j.Logger;
 import shukaro.questlog.net.CommonProxy;
 
-@Mod(modid = Questlog.modID, name = Questlog.modName, version = Questlog.modVersion,
-        dependencies = "required-after:CoFHCore")
+@Mod(modid = Questlog.modID, useMetadata = true, dependencies = "required-after:CoFHCore")
 public class Questlog
 {
     @SidedProxy(clientSide = "shukaro.questlog.net.ClientProxy", serverSide = "shukaro.questlog.net.CommonProxy")
     public static CommonProxy proxy;
 
     public static final String modID = "Questlog";
-    public static final String modName = "Questlog";
-    public static final String modChannel = "Questlog";
-    public static final String modVersion = "0.1";
+    public static String version = "";
 
     public static Logger logger;
 

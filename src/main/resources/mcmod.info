@@ -16,7 +16,7 @@
   ],
   "parent": "",
   "dependencies": [
-    "MinecraftForge"
+    "MinecraftForge", "CoFHCore"
   ]
 }
 ]

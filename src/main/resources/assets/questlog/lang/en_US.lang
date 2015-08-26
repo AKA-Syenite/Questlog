@@ -1,0 +1,10 @@
+#Commands
+command.questlog.notFound=No such command, try /questlog help for a listing of commands.
+command.questlog.available=Available commands are:
+command.questlog.and=and
+
+command.questlog.version=Gives you the version of this mod.
+command.questlog.version.syntax=/questlog version
+
+command.questlog.help=Displays help information.
+command.questlog.help.syntax=/questlog help [command]
