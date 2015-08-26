@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.*;
 import org.apache.logging.log4j.Logger;
 import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.PlayerData;
@@ -28,15 +25,17 @@ public class Questlog
 
     public static Logger logger;
 
-    public static QuestData questData;
-    public static BookData bookData;
-    public static PlayerData playerData;
-
     public static Gson gson = new Gson();
     public static JsonParser parser = new JsonParser();
 
     @Mod.Instance(modID)
     public static Questlog instance;
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent evt)
+    {
+
+    }
 
     @Mod.EventHandler
     public void serverStarted(FMLServerStartedEvent evt)

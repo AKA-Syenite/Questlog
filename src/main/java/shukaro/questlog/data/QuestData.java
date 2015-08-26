@@ -26,7 +26,7 @@ public class QuestData
     private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/questData.json");
     private static ResourceLocation schemaFile = new ResourceLocation("questlog:schema/questData.json");
 
-    public QuestData(File file)
+    public static void init(File file)
     {
         dataFile = file;
         try

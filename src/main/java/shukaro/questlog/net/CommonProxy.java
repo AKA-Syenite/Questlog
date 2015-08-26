@@ -16,15 +16,15 @@ public class CommonProxy
 {
     public void serverStarted(FMLServerStartedEvent evt)
     {
-        Questlog.playerData = new PlayerData(new File(MinecraftServer.getServer().worldServers[0].getSaveHandler().getWorldDirectory(), "questlogPlayerData.json"));
+        PlayerData.init(new File(MinecraftServer.getServer().worldServers[0].getSaveHandler().getWorldDirectory(), "questlogPlayerData.json"));
     }
 
     public void preInit(FMLPreInitializationEvent evt)
     {
         Questlog.logger = evt.getModLog();
         QuestConfig.initCommon(evt);
-        Questlog.questData = new QuestData(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "questData.json"));
-        Questlog.bookData = new BookData(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "bookData.json"));
+        QuestData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "questData.json"));
+        BookData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "bookData.json"));
         MinecraftForge.EVENT_BUS.register(new QuestEventHandler());
     }
 

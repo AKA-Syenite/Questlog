@@ -1,6 +1,7 @@
 package shukaro.questlog.data.questing;
 
 import net.minecraft.entity.player.EntityPlayer;
+import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
 import java.util.ArrayList;
@@ -16,11 +17,6 @@ public class QuestManager
 
     public static HashMap<AbstractObjective, String> objectiveRegistry = new HashMap<AbstractObjective, String>();
     public static HashMap<AbstractReward, String> rewardRegistry = new HashMap<AbstractReward, String>();
-
-    public static void instantiateObjectives(EntityPlayer player, String questUID)
-    {
-        instantiateObjectives(player.getPersistentID(), questUID);
-    }
 
     public static void instantiateObjectives(UUID player, String questUID)
     {
@@ -38,7 +34,7 @@ public class QuestManager
         }
     }
 
-    public static AbstractObjective startObjective(String obj)
+    protected static AbstractObjective startObjective(String obj)
     {
         Pattern parser = Pattern.compile("(.+)\\((.*)\\)");
         Matcher result = parser.matcher(obj);
@@ -60,12 +56,7 @@ public class QuestManager
         return null;
     }
 
-    public static void removeObjectives(EntityPlayer player, String questUID)
-    {
-        removeObjectives(player.getPersistentID(), questUID);
-    }
-
-    public static void removeObjectives(UUID player, String questUID)
+    protected static void removeObjectives(UUID player, String questUID)
     {
         if (!runningObjectives.keySet().contains(player))
             return;
@@ -74,11 +65,6 @@ public class QuestManager
             if (ao.parentQuest.equals(questUID))
                 runningObjectives.get(player).remove(ao);
         }
-    }
-
-    public static boolean isCompleted(EntityPlayer player, String questUID)
-    {
-        return isCompleted(player.getPersistentID(), questUID);
     }
 
     public static boolean isCompleted(UUID player, String questUID)
@@ -105,12 +91,11 @@ public class QuestManager
     public static void tryComplete(UUID player, String questUID)
     {
         if (isCompleted(player, questUID))
+        {
             giveRewards(player, questUID);
-    }
-
-    public static void giveRewards(EntityPlayer player, String questUID)
-    {
-        giveRewards(player.getPersistentID(), questUID);
+            PlayerData.updateQuestCompletion(player, questUID, true);
+            removeObjectives(player, questUID);
+        }
     }
 
     public static void giveRewards(UUID player, String questUID)
@@ -120,7 +105,7 @@ public class QuestManager
             doReward(player, reward);
     }
 
-    public static void doReward(UUID player, String reward)
+    protected static void doReward(UUID player, String reward)
     {
         Pattern parser = Pattern.compile("(.+)\\((.*)\\)");
         Matcher result = parser.matcher(reward);
@@ -142,7 +127,7 @@ public class QuestManager
         }
     }
 
-    public static int getNumObjectiveArgs(String objective)
+    protected static int getNumObjectiveArgs(String objective)
     {
         Pattern parser = Pattern.compile("(.+)\\[([0-9]+)\\]");
         for (String key : objectiveRegistry.values())
@@ -154,7 +139,7 @@ public class QuestManager
         return 0;
     }
 
-    public static int getNumRewardArgs(String reward)
+    protected static int getNumRewardArgs(String reward)
     {
         Pattern parser = Pattern.compile("(.+)\\[([0-9]+)\\]");
         for (String key : rewardRegistry.values())

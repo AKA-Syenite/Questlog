@@ -10,6 +10,9 @@
           "uuid": {
             "type": "string"
           },
+          "complete": {
+            "type": "string"
+          },
           "quests": {
             "type": "array",
             "items": {
@@ -36,6 +39,7 @@
         "additionalProperties": false,
         "required": [
           "uuid",
+          "complete",
           "quests"
         ]
       }

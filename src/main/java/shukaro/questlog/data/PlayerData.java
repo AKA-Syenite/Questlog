@@ -29,7 +29,7 @@ public class PlayerData
 
     private static ResourceLocation schemaFile = new ResourceLocation("questlog:schema/playerData.json");
 
-    public PlayerData(File file)
+    public static void init(File file)
     {
         dataFile = file;
         try
@@ -90,11 +90,6 @@ public class PlayerData
         out.close();
     }
 
-    public static JsonObject getPlayerData(EntityPlayer player)
-    {
-        return getPlayerData(player.getPersistentID());
-    }
-
     public static JsonObject getPlayerData(UUID playerUUID)
     {
         Iterator<JsonElement> playerIT = data.iterator();
@@ -116,11 +111,6 @@ public class PlayerData
         return player;
     }
 
-    public static void giveQuest(EntityPlayer player, String questUID)
-    {
-        giveQuest(player.getPersistentID(), questUID);
-    }
-
     public static void giveQuest(UUID uuid, String questUID)
     {
         JsonObject player = getPlayerData(uuid);
@@ -133,12 +123,12 @@ public class PlayerData
             if (quest.get("uid").getAsString().equals(uuid.toString()))
                 return;
         }
-        player.getAsJsonArray("quests").add(questTemplate);
-    }
-
-    public static void removeQuest(EntityPlayer player, String questUID)
-    {
-        removeQuest(player.getPersistentID(), questUID);
+        JsonObject newQuest = new JsonObject();
+        newQuest.add("uid", new JsonPrimitive(questUID));
+        newQuest.add("complete", new JsonPrimitive("false"));
+        newQuest.add("questArgs", new JsonArray());
+        player.getAsJsonArray("quests").add(newQuest);
+        QuestManager.instantiateObjectives(uuid, questUID);
     }
 
     public static void removeQuest(UUID uuid, String questUID)
@@ -155,11 +145,6 @@ public class PlayerData
                 return;
             }
         }
-    }
-
-    public static ArrayList<String> getQuestIDs(EntityPlayer player)
-    {
-        return getQuestIDs(player.getPersistentID());
     }
 
     public static ArrayList<String> getQuestIDs(UUID playerUUID)
@@ -206,6 +191,36 @@ public class PlayerData
                 for (String s : args)
                     newArgs.add(new JsonPrimitive(s));
                 quest.add("args", newArgs);
+            }
+        }
+    }
+
+    public static boolean getQuestCompletion(UUID playerUUID, String questUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
+        JsonObject quest = null;
+        while (questIT.hasNext())
+        {
+            quest = questIT.next().getAsJsonObject();
+            if (quest.get("uid").getAsString().equals(questUID))
+                return quest.get("complete").getAsString().equals("true");
+        }
+        return false;
+    }
+
+    public static void updateQuestCompletion(UUID playerUUID, String questUID, boolean complete)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
+        JsonObject quest = null;
+        while (questIT.hasNext())
+        {
+            quest = questIT.next().getAsJsonObject();
+            if (quest.get("uid").getAsString().equals(questUID))
+            {
+                quest.remove("complete");
+                quest.add("complete", new JsonPrimitive(complete ? "true" : "false"));
             }
         }
     }

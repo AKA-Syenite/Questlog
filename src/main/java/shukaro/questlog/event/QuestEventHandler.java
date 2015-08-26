@@ -3,6 +3,7 @@ package shukaro.questlog.event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import shukaro.questlog.Questlog;
+import shukaro.questlog.data.PlayerData;
 
 import java.io.IOException;
 
@@ -13,7 +14,7 @@ public class QuestEventHandler
     {
         try
         {
-            Questlog.playerData.save();
+            PlayerData.save();
         }
         catch (IOException ex)
         {
