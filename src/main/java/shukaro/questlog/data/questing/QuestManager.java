@@ -1,7 +1,5 @@
 package shukaro.questlog.data.questing;
 
-import com.google.gson.JsonObject;
-import net.minecraft.entity.player.EntityPlayer;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
@@ -18,7 +16,6 @@ public class QuestManager
 
     public static void instantiateObjectives(UUID playerUUID, String questUID)
     {
-        JsonObject player = PlayerData.getPlayerData(playerUUID);
         ArrayList<String> objectives = new ArrayList<String>(Arrays.asList(PlayerData.getObjectives(playerUUID, questUID)));
         if (objectives.size() == 0 || (objectives.size() == 1 && objectives.get(0).equals("")))
             objectives = QuestData.getQuestObjectives(questUID);
