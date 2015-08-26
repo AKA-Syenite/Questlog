@@ -8,3 +8,6 @@ command.questlog.version.syntax=/questlog version
 
 command.questlog.help=Displays help information.
 command.questlog.help.syntax=/questlog help [command]
+
+command.questlog.syntax=Displays syntax information.
+command.questlog.syntax.syntax=/cofh syntax [command]
