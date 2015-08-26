@@ -105,6 +105,7 @@ public class PlayerData
             JsonObject newPlayer = new JsonObject();
             newPlayer.add("uuid", new JsonPrimitive(playerUUID.toString()));
             newPlayer.add("groups", new JsonArray());
+            newPlayer.add("leading", new JsonArray());
             newPlayer.add("quests", new JsonArray());
             data.add(newPlayer);
             player = newPlayer;
@@ -230,7 +231,7 @@ public class PlayerData
     {
         JsonObject player = getPlayerData(playerUUID);
         String[] out = null;
-        int numGroups = player.getAsJsonArray("groups").size();
+        int numGroups = player.getAsJsonArray("groups").size() + player.getAsJsonArray("leading").size();
         if (numGroups > 0)
         {
             out = new String[numGroups];
@@ -240,8 +241,27 @@ public class PlayerData
                 out[i] = player.getAsJsonArray("groups").get(i).getAsString();
                 i++;
             }
+            for (JsonElement e : player.getAsJsonArray("leading"))
+            {
+                out[i] = player.getAsJsonArray("leading").get(i).getAsString();
+                i++;
+            }
         }
         return out;
+    }
+
+    public static UUID[] getPlayersInGroup(String groupUID)
+    {
+        Iterator<JsonElement> playerIT = data.iterator();
+        ArrayList<UUID> players = new ArrayList<UUID>();
+        while (playerIT.hasNext())
+        {
+            JsonObject player = (JsonObject)playerIT.next();
+            UUID playerUUID = UUID.fromString(player.get("uuid").getAsString());
+            if (isPlayerInGroup(playerUUID, groupUID))
+                players.add(playerUUID);
+        }
+        return players.toArray(new UUID[players.size()]);
     }
 
     public static boolean isPlayerInGroup(UUID playerUUID, String groupUID)
@@ -253,6 +273,44 @@ public class PlayerData
                 return true;
         }
         return false;
+    }
+
+    public static boolean isPlayerLeading(UUID playerUUID, String groupUID)
+    {
+        if (isPlayerInGroup(playerUUID, groupUID))
+        {
+            JsonObject player = getPlayerData(playerUUID);
+            for (JsonElement g : player.getAsJsonArray("leading"))
+            {
+                if (g.getAsString().equals(groupUID))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static UUID getGroupLeader(String groupUID)
+    {
+        for (UUID player : getPlayersInGroup(groupUID))
+        {
+            if (isPlayerLeading(player, groupUID))
+                return player;
+        }
+        return null;
+    }
+
+    public static void setGroupLeader(UUID playerUUID, String groupUID)
+    {
+        for (UUID player : getPlayersInGroup(groupUID))
+        {
+            if (isPlayerLeading(player, groupUID))
+            {
+                removePlayerFromGroup(player, groupUID);
+                addPlayerToGroup(player, groupUID);
+            }
+        }
+        JsonObject player = getPlayerData(playerUUID);
+        player.getAsJsonArray("leading").add(new JsonPrimitive(groupUID));
     }
 
     public static void addPlayerToGroup(UUID playerUUID, String groupUID)
@@ -268,20 +326,42 @@ public class PlayerData
     {
         if (isPlayerInGroup(playerUUID, groupUID))
         {
-            JsonObject player = getPlayerData(playerUUID);
-            String[] groups = getPlayerGroups(playerUUID);
-            String[] newGroups = new String[groups.length-1];
-            int i = 0;
-            for (String s : groups)
+            if (isPlayerLeading(playerUUID, groupUID))
             {
-                if (!s.equals(groupUID))
+                JsonObject player = getPlayerData(playerUUID);
+                JsonArray leading = player.getAsJsonArray("leading");
+                String[] newLeading = new String[leading.size()-1];
+                int i = 0;
+                for (JsonElement e : leading)
                 {
-                    newGroups[i] = s;
-                    i++;
+                    String s = e.getAsString();
+                    if (!s.equals(groupUID))
+                    {
+                        newLeading[i] = s;
+                        i++;
+                    }
                 }
+                player.remove("leading");
+                player.add("leading", Questlog.parser.parse(Questlog.gson.toJson(newLeading)).getAsJsonArray());
             }
-            player.remove("groups");
-            player.add("groups", Questlog.parser.parse(Questlog.gson.toJson(newGroups)).getAsJsonArray());
+            else
+            {
+                JsonObject player = getPlayerData(playerUUID);
+                JsonArray groups = player.getAsJsonArray("groups");
+                String[] newGroups = new String[groups.size()-1];
+                int i = 0;
+                for (JsonElement e : groups)
+                {
+                    String s = e.getAsString();
+                    if (!s.equals(groupUID))
+                    {
+                        newGroups[i] = s;
+                        i++;
+                    }
+                }
+                player.remove("groups");
+                player.add("groups", Questlog.parser.parse(Questlog.gson.toJson(newGroups)).getAsJsonArray());
+            }
         }
     }
 }

@@ -16,6 +16,12 @@
               "type": "string"
             }
           },
+          "leading": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "quests": {
             "type": "array",
             "items": {
