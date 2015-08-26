@@ -39,6 +39,7 @@ public class CommandHandler extends CommandBase
         registerSubCommand(new CommandHelp());
         registerSubCommand(new CommandSyntax());
         registerSubCommand(new CommandNewQuest());
+        registerSubCommand(new CommandDeleteQuest());
     }
 
     public static boolean registerSubCommand(ISubCommand subCommand)

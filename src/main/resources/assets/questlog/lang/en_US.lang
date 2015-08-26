@@ -4,7 +4,9 @@ command.questlog.available=Available commands are:
 command.questlog.disallowed=You are not allowed to use this command.
 command.questlog.and=and
 command.questlog.uidtaken=That UID is already in use by another quest.
+command.questlog.nosuchquest=There is no quest with that UID.
 command.questlog.questcreated=Defined new quest.
+command.questlog.questdeleted=Deleted quest.
 
 command.questlog.version=Gives you the version of this mod.
 command.questlog.version.syntax=/questlog version
@@ -16,4 +18,7 @@ command.questlog.syntax=Displays syntax information.
 command.questlog.syntax.syntax=/questlog syntax [command]
 
 command.questlog.newQuest=Defines a new quest.
-command.questlog.newQuest.syntax=/questlog questUID objective1(arg1,arg2);objective2(arg1) reward1(arg1);reward2(arg1,arg2) tag1;tag2
+command.questlog.newQuest.syntax=/questlog newQuest [questUID] [objective1(arg1,arg2);objective2(arg1)] [reward1(arg1);reward2(arg1,arg2)] [tag1;tag2]
+
+command.questlog.deleteQuest=Deletes a quest.
+command.questlog.deleteQuest.syntax=/questlog deleteQuest [questUID]

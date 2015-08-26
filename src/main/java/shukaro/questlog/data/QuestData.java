@@ -102,12 +102,20 @@ public class QuestData
         JsonArray newArray = new JsonArray();
         for (int i=0; i<data.size(); i++)
         {
-            if (!data.get(i).getAsJsonObject().get("uid").toString().equals("uid"))
+            if (!data.get(i).getAsJsonObject().get("uid").getAsString().equals(uid))
                 newArray.add(data.get(i));
         }
         if (data.size() == newArray.size())
             return false;
         data = newArray;
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return true;
     }
 
