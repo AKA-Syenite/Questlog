@@ -19,12 +19,12 @@ public class QuestManager
     public static void instantiateObjectives(UUID playerUUID, String questUID)
     {
         JsonObject player = PlayerData.getPlayerData(playerUUID);
-        ArrayList<String> objectiveArgs = new ArrayList<String>(Arrays.asList(PlayerData.getObjectiveArgs(playerUUID, questUID)));
-        if (objectiveArgs.size() == 0 || (objectiveArgs.size() == 1 && objectiveArgs.get(0).equals("")))
-            objectiveArgs = QuestData.getQuestObjectives(questUID);
+        ArrayList<String> objectives = new ArrayList<String>(Arrays.asList(PlayerData.getObjectives(playerUUID, questUID)));
+        if (objectives.size() == 0 || (objectives.size() == 1 && objectives.get(0).equals("")))
+            objectives = QuestData.getQuestObjectives(questUID);
         if (!runningObjectives.keySet().contains(playerUUID))
             runningObjectives.put(playerUUID, new ArrayList<AbstractObjective>());
-        for (String obj : objectiveArgs)
+        for (String obj : objectives)
         {
             AbstractObjective ao = startObjective(obj);
             if (ao != null)

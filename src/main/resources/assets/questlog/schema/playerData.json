@@ -36,7 +36,7 @@
                 "tracked": {
                   "type": "string"
                 },
-                "objectiveArgs": {
+                "objectives": {
                   "type": "array",
                   "items": {
                     "type": "string"
@@ -48,7 +48,7 @@
                 "uid",
                 "complete",
                 "tracked",
-                "objectiveArgs"
+                "objectives"
               ]
             }
           }
