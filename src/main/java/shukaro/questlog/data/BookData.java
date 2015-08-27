@@ -23,7 +23,6 @@ public class BookData
     private static JsonArray data;
     private static File dataFile;
 
-    private static ResourceLocation templateFile = new ResourceLocation("questlog:templates/bookData.json");
     private static ResourceLocation schemaFile = new ResourceLocation("questlog:schema/bookData.json");
 
     public static void init(File file)
@@ -66,7 +65,7 @@ public class BookData
     {
         if (!dataFile.exists())
         {
-            Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(templateFile).getInputStream(), dataFile.toPath());
+            dataFile.createNewFile();
             data = new JsonArray();
         }
         else
