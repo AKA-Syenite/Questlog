@@ -189,6 +189,13 @@ public class QuestData
         setQuestRewards(getQuest(uid), Questlog.parser.parse(Questlog.gson.toJson(rewards)).getAsJsonArray());
     }
 
+    public static void setQuestUID(String oldUID, String newUID)
+    {
+        JsonObject quest = getQuest(oldUID);
+        quest.remove("uid");
+        quest.add("uid", new JsonPrimitive(newUID));
+    }
+
     protected static JsonArray getQuestTags(JsonObject quest)
     {
         return quest.getAsJsonArray("tags");

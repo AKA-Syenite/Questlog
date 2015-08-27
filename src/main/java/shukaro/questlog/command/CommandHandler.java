@@ -1,7 +1,6 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
-import cofh.lib.util.helpers.StringHelper;
 import gnu.trove.map.TMap;
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.command.CommandBase;
@@ -9,9 +8,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +34,7 @@ public class CommandHandler extends CommandBase
         registerSubCommand(new CommandList());
         registerSubCommand(new CommandNew());
         registerSubCommand(new CommandDelete());
+        registerSubCommand(new CommandEdit());
     }
 
     public static boolean registerSubCommand(ISubCommand subCommand)

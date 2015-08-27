@@ -21,6 +21,9 @@ command.questlog.coordnotint=Coordinates must be integers.
 command.questlog.first=[1st]
 command.questlog.second=[2nd]
 command.questlog.total=Total:
+command.questlog.updatedquest=Updated quest.
+command.questlog.updatedpage=Updated page.
+command.questlog.updatednode=Updated node.
 
 command.questlog.version=Gives you the version of this mod.
 command.questlog.version.syntax=/questlog version

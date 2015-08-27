@@ -148,6 +148,19 @@ public class BookData
         }
     }
 
+    public static boolean setPageUID(String oldUID, String newUID)
+    {
+        if (getPage(oldUID) == null)
+            return false;
+        else
+        {
+            JsonObject page = getPage(oldUID);
+            page.remove("uid");
+            page.add("uid", new JsonPrimitive(newUID));
+            return true;
+        }
+    }
+
     public static boolean createQuestNode(String pageUID, String nodeUID, String questUID, int x, int y, String[] parents, String[] tags)
     {
         if (getPage(pageUID) == null || QuestData.getQuest(questUID) == null || getNodeOnPage(getPage(pageUID), nodeUID) != null)
