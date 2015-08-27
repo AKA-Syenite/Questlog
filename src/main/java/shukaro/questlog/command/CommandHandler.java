@@ -19,18 +19,15 @@ import java.util.Set;
 /**
  * Courtesy of CoFHCore's command implementation
  *
- * Permission Levels
- * -1 = everyone
- * 0 = everyone(?)
- * 1 = authed people(maybe?)
- * 2 = op
- * 3 = server admin(maybe?)
- * 4 = ???
+ * Permission Levels (via http://minecraft.gamepedia.com/Server_properties)
+ * 0 = everyone
+ * 1 = ops that can bypass spawn protection
+ * 2 = ops that can /clear, /difficulty, /effect, /gamemode, /gamerule, /give, and /tp, and can edit command blocks.
+ * 3 = ops that can /ban, /deop, /kick, and /op.
+ * 4 = ops that can /stop.
  */
 public class CommandHandler extends CommandBase
 {
-    public static final String COMMAND_DISALLOWED = StringHelper.LIGHT_RED + StringHelper.localize("command.questlog.disallowed");
-
     private static TMap<String, ISubCommand> commands = new THashMap<String, ISubCommand>();
 
     static

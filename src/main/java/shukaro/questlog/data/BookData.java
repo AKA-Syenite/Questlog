@@ -146,6 +146,61 @@ public class BookData
         }
     }
 
+    public static boolean createQuestNode(String pageUID, String nodeUID, String questUID, int x, int y, String[] parents, String[] tags)
+    {
+        if (getPage(pageUID) == null || QuestData.getQuest(questUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+            return false;
+        else
+        {
+            JsonObject node = new JsonObject();
+            node.add("uid", new JsonPrimitive(nodeUID));
+            node.add("questUID", new JsonPrimitive(questUID));
+            node.add("x", new JsonPrimitive(x));
+            node.add("y", new JsonPrimitive(y));
+            node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
+            node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
+            getPage(pageUID).getAsJsonArray("questNodes").add(node);
+            return true;
+        }
+    }
+
+    public static boolean createPageNode(String pageUID, String nodeUID, String targetUID, int x, int y, String[] parents, String[] tags)
+    {
+        if (getPage(pageUID) == null || getPage(targetUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+            return false;
+        else
+        {
+            JsonObject node = new JsonObject();
+            node.add("uid", new JsonPrimitive(nodeUID));
+            node.add("target", new JsonPrimitive(targetUID));
+            node.add("x", new JsonPrimitive(x));
+            node.add("y", new JsonPrimitive(y));
+            node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
+            node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
+            getPage(pageUID).getAsJsonArray("pageNodes").add(node);
+            return true;
+        }
+    }
+
+    public static boolean createLineNode(String pageUID, String nodeUID, int x, int y, int x2, int y2, String[] parents, String[] tags)
+    {
+        if (getPage(pageUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+            return false;
+        else
+        {
+            JsonObject node = new JsonObject();
+            node.add("uid", new JsonPrimitive(nodeUID));
+            node.add("x", new JsonPrimitive(x));
+            node.add("y", new JsonPrimitive(y));
+            node.add("x2", new JsonPrimitive(x2));
+            node.add("y2", new JsonPrimitive(y2));
+            node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
+            node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
+            getPage(pageUID).getAsJsonArray("lineNodes").add(node);
+            return true;
+        }
+    }
+
     protected static JsonArray getPageNodes(JsonObject page)
     {
         JsonArray temp = new JsonArray();
@@ -172,6 +227,11 @@ public class BookData
                 return node.getAsJsonObject();
         }
         return null;
+    }
+
+    public static JsonObject getPageNode(String pageUID, String uid)
+    {
+        return getPageNode(getPage(pageUID), uid);
     }
 
     public static ArrayList<String> getNodeParents(String pageUID, String nodeUID)

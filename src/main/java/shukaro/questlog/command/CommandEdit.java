@@ -1,23 +1,22 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
 import java.util.List;
 
-public class CommandList implements ISubCommand
+public class CommandEdit implements ISubCommand
 {
     @Override
     public int getPermissionLevel()
     {
-        return 2;
+        return 0;
     }
 
     @Override
     public String getCommandName()
     {
-        return "list";
+        return null;
     }
 
     @Override
@@ -27,11 +26,8 @@ public class CommandList implements ISubCommand
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args)
+    public List<String> addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)
     {
-        if (args.length == 2)
-            return CommandBase.getListOfStringsMatchingLastWord(args, "quest", "page", "questNode", "pageNode", "lineNode");
         return null;
     }
 }

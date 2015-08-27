@@ -7,6 +7,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
+import scala.Int;
 import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.QuestData;
 
@@ -66,19 +67,108 @@ public class CommandNew implements ISubCommand
             }
             else if (target.equals("questNode") && args.length == 9)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                String questUID = args[4];
+                String xs = args[5];
+                String ys = args[6];
+                String[] parents = args[7].split(";");
+                String[] tags = args[8].split(";");
+                int x;
+                int y;
+                try
+                {
+                    x = Integer.parseInt(xs);
+                    y = Integer.parseInt(ys);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new WrongUsageException("command.questlog.coordnotint");
+                }
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage")));
+                else if (QuestData.getQuest(questUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchquest")));
+                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
+                else
+                {
+                    BookData.createQuestNode(pageUID, nodeUID, questUID, x, y, parents, tags);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.questnodecreated")));
+                }
             }
-            else if (target.equals("pageNode") && args.length == 10)
+            else if (target.equals("pageNode") && args.length == 9)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                String targetUID = args[4];
+                String xs = args[5];
+                String ys = args[6];
+                String[] parents = args[7].split(";");
+                String[] tags = args[8].split(";");
+                int x;
+                int y;
+                try
+                {
+                    x = Integer.parseInt(xs);
+                    y = Integer.parseInt(ys);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new WrongUsageException("command.questlog.coordnotint");
+                }
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage") + " " + StringHelper.localize("command.questlog.first")));
+                else if (BookData.getPage(targetUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage") + " " + StringHelper.localize("command.questlog.second")));
+                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
+                else
+                {
+                    BookData.createPageNode(pageUID, nodeUID, targetUID, x, y, parents, tags);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.pagenodecreated")));
+                }
             }
-            else if (target.equals("lineNode") && args.length == 9)
+            else if (target.equals("lineNode") && args.length == 10)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                String xs = args[4];
+                String ys = args[5];
+                String x2s = args[6];
+                String y2s = args[7];
+                String[] parents = args[8].split(";");
+                String[] tags = args[9].split(";");
+                int x;
+                int y;
+                int x2;
+                int y2;
+                try
+                {
+                    x = Integer.parseInt(xs);
+                    y = Integer.parseInt(ys);
+                    x2 = Integer.parseInt(x2s);
+                    y2 = Integer.parseInt(y2s);
+                }
+                catch (NumberFormatException e)
+                {
+                    throw new WrongUsageException("command.questlog.coordnotint");
+                }
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage")));
+                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
+                else
+                {
+                    BookData.createLineNode(pageUID, nodeUID, x, y, x2, y2, parents, tags);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.linenodecreated")));
+                }
             }
+            else
+                throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
         }
         else
-            throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
+            throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
     }
 
     @Override
