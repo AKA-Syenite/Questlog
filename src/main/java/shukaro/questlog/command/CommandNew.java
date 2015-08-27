@@ -7,7 +7,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
-import scala.Int;
 import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.QuestData;
 
@@ -89,12 +88,16 @@ public class CommandNew implements ISubCommand
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage")));
                 else if (QuestData.getQuest(questUID) == null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchquest")));
-                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) != null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
                 else
                 {
                     BookData.createQuestNode(pageUID, nodeUID, questUID, x, y, parents, tags);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.questnodecreated")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
                 }
             }
             else if (target.equals("pageNode") && args.length == 9)
@@ -121,12 +124,16 @@ public class CommandNew implements ISubCommand
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage") + " " + StringHelper.localize("command.questlog.first")));
                 else if (BookData.getPage(targetUID) == null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage") + " " + StringHelper.localize("command.questlog.second")));
-                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) != null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
                 else
                 {
                     BookData.createPageNode(pageUID, nodeUID, targetUID, x, y, parents, tags);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.pagenodecreated")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
                 }
             }
             else if (target.equals("lineNode") && args.length == 10)
@@ -156,12 +163,16 @@ public class CommandNew implements ISubCommand
                 }
                 if (BookData.getPage(pageUID) == null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchpage")));
-                else if (BookData.getPageNode(pageUID, nodeUID) != null)
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) != null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
                 else
                 {
                     BookData.createLineNode(pageUID, nodeUID, x, y, x2, y2, parents, tags);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.linenodecreated")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
                 }
             }
             else

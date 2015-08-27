@@ -148,7 +148,7 @@ public class BookData
 
     public static boolean createQuestNode(String pageUID, String nodeUID, String questUID, int x, int y, String[] parents, String[] tags)
     {
-        if (getPage(pageUID) == null || QuestData.getQuest(questUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+        if (getPage(pageUID) == null || QuestData.getQuest(questUID) == null || getNodeOnPage(getPage(pageUID), nodeUID) != null)
             return false;
         else
         {
@@ -166,7 +166,7 @@ public class BookData
 
     public static boolean createPageNode(String pageUID, String nodeUID, String targetUID, int x, int y, String[] parents, String[] tags)
     {
-        if (getPage(pageUID) == null || getPage(targetUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+        if (getPage(pageUID) == null || getPage(targetUID) == null || getNodeOnPage(getPage(pageUID), nodeUID) != null)
             return false;
         else
         {
@@ -184,7 +184,7 @@ public class BookData
 
     public static boolean createLineNode(String pageUID, String nodeUID, int x, int y, int x2, int y2, String[] parents, String[] tags)
     {
-        if (getPage(pageUID) == null || getPageNode(getPage(pageUID), nodeUID) != null)
+        if (getPage(pageUID) == null || getNodeOnPage(getPage(pageUID), nodeUID) != null)
             return false;
         else
         {
@@ -201,7 +201,58 @@ public class BookData
         }
     }
 
-    protected static JsonArray getPageNodes(JsonObject page)
+    public static boolean removeQuestNode(String pageUID, String nodeUID)
+    {
+        JsonObject page = getPage(pageUID);
+        if (page == null || getNodeOnPage(pageUID, nodeUID) == null)
+            return false;
+        JsonArray newNodes = new JsonArray();
+        for (JsonElement e : page.getAsJsonArray("questNodes"))
+        {
+            JsonObject node = (JsonObject)e;
+            if (!node.get("uid").getAsString().equals(nodeUID))
+                newNodes.add(node);
+        }
+        page.remove("questNodes");
+        page.add("questNodes", newNodes);
+        return true;
+    }
+
+    public static boolean removePageNode(String pageUID, String nodeUID)
+    {
+        JsonObject page = getPage(pageUID);
+        if (page == null || getNodeOnPage(pageUID, nodeUID) == null)
+            return false;
+        JsonArray newNodes = new JsonArray();
+        for (JsonElement e : page.getAsJsonArray("pageNodes"))
+        {
+            JsonObject node = (JsonObject)e;
+            if (!node.get("uid").getAsString().equals(nodeUID))
+                newNodes.add(node);
+        }
+        page.remove("pageNodes");
+        page.add("pageNodes", newNodes);
+        return true;
+    }
+
+    public static boolean removeLineNode(String pageUID, String nodeUID)
+    {
+        JsonObject page = getPage(pageUID);
+        if (page == null || getNodeOnPage(pageUID, nodeUID) == null)
+            return false;
+        JsonArray newNodes = new JsonArray();
+        for (JsonElement e : page.getAsJsonArray("lineNodes"))
+        {
+            JsonObject node = (JsonObject)e;
+            if (!node.get("uid").getAsString().equals(nodeUID))
+                newNodes.add(node);
+        }
+        page.remove("lineNodes");
+        page.add("lineNodes", newNodes);
+        return true;
+    }
+
+    protected static JsonArray getNodesOnPage(JsonObject page)
     {
         JsonArray temp = new JsonArray();
         temp.addAll(page.getAsJsonArray("questNodes"));
@@ -210,18 +261,18 @@ public class BookData
         return temp;
     }
 
-    public static ArrayList<String> getPageNodeIDs(String pageUID)
+    public static ArrayList<String> getNodeIDsOnPage(String pageUID)
     {
         JsonObject node = getPage(pageUID);
         ArrayList<String> out = new ArrayList<String>();
-        for (JsonElement e : getPageNodes(node))
+        for (JsonElement e : getNodesOnPage(node))
             out.add(((JsonObject)e).get("uid").getAsString());
         return out;
     }
 
-    protected static JsonObject getPageNode(JsonObject page, String uid)
+    protected static JsonObject getNodeOnPage(JsonObject page, String uid)
     {
-        for (JsonElement node : getPageNodes(page))
+        for (JsonElement node : getNodesOnPage(page))
         {
             if (node.getAsJsonObject().get("uid").getAsString().equals(uid))
                 return node.getAsJsonObject();
@@ -229,14 +280,14 @@ public class BookData
         return null;
     }
 
-    public static JsonObject getPageNode(String pageUID, String uid)
+    public static JsonObject getNodeOnPage(String pageUID, String uid)
     {
-        return getPageNode(getPage(pageUID), uid);
+        return getNodeOnPage(getPage(pageUID), uid);
     }
 
     public static ArrayList<String> getNodeParents(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         ArrayList<String> out = new ArrayList<String>();
         if (node != null)
         {
@@ -249,7 +300,7 @@ public class BookData
 
     public static ArrayList<String> getNodeTags(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         ArrayList<String> out = new ArrayList<String>();
         if (node != null)
         {
@@ -262,7 +313,7 @@ public class BookData
 
     public static int[] getNodePos(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         int[] pos = new int[2];
         if (node != null)
         {
@@ -274,7 +325,7 @@ public class BookData
 
     public static String getQuestUIDForQuestNode(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         if (node != null && node.has("questUID"))
             return node.get("questUID").getAsString();
         return "";
@@ -282,7 +333,7 @@ public class BookData
 
     public static int[] getSecondaryPosForLineNode(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         int[] pos = new int[2];
         if (node != null && node.has("x2"))
         {
@@ -294,7 +345,7 @@ public class BookData
 
     public static String getTargetForPageNode(String pageUID, String nodeUID)
     {
-        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        JsonObject node = getNodeOnPage(getPage(pageUID), nodeUID);
         if (node != null && node.has("target"))
             return node.get("target").getAsString();
         return "";

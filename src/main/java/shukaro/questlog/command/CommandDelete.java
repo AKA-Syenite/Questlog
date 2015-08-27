@@ -60,17 +60,59 @@ public class CommandDelete implements ISubCommand
                 else
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid")));
             }
-            else if (target.equals("questNode") && args.length == 9)
+            else if (target.equals("questNode") && args.length == 4)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.first")));
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.second")));
+                else
+                {
+                    BookData.removeQuestNode(pageUID, nodeUID);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.questnodedeleted")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
+                }
             }
-            else if (target.equals("pageNode") && args.length == 10)
+            else if (target.equals("pageNode") && args.length == 4)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.first")));
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.second")));
+                else
+                {
+                    BookData.removePageNode(pageUID, nodeUID);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.pagenodedeleted")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
+                }
             }
-            else if (target.equals("lineNode") && args.length == 9)
+            else if (target.equals("lineNode") && args.length == 4)
             {
-
+                String pageUID = args[2];
+                String nodeUID = args[3];
+                if (BookData.getPage(pageUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.first")));
+                else if (BookData.getNodeOnPage(pageUID, nodeUID) == null)
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid") + " " + StringHelper.localize("command.questlog.second")));
+                else
+                {
+                    BookData.removeLineNode(pageUID, nodeUID);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.linenodedeleted")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync to other clients
+                    }
+                }
             }
         }
         else
