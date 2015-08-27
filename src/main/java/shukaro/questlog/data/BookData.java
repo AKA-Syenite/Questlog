@@ -8,6 +8,7 @@ import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import shukaro.questlog.Questlog;
@@ -55,7 +56,10 @@ public class BookData
             data = new JsonArray();
         }
         else
+        {
             Questlog.logger.info("Sucessfully validated book data");
+            save();
+        }
     }
 
     public static void load() throws IOException
@@ -101,13 +105,45 @@ public class BookData
         JsonArray newArray = new JsonArray();
         for (int i=0; i<data.size(); i++)
         {
-            if (!data.get(i).getAsJsonObject().get("uid").toString().equals("uid"))
+            if (!data.get(i).getAsJsonObject().get("uid").getAsString().equals(uid))
                 newArray.add(data.get(i));
         }
         if (data.size() == newArray.size())
             return false;
         data = newArray;
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return true;
+    }
+
+    public static boolean createPage(String uid)
+    {
+        if (getPage(uid) != null)
+            return false;
+        else
+        {
+            JsonObject newPage = new JsonObject();
+            newPage.add("uid", new JsonPrimitive(uid));
+            newPage.add("questNodes", new JsonArray());
+            newPage.add("lineNodes", new JsonArray());
+            newPage.add("pageNodes", new JsonArray());
+            data.add(newPage);
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            return true;
+        }
     }
 
     protected static JsonArray getPageNodes(JsonObject page)
@@ -174,6 +210,14 @@ public class BookData
             pos[1] = node.get("y").getAsInt();
         }
         return pos;
+    }
+
+    public static String getQuestUIDForQuestNode(String pageUID, String nodeUID)
+    {
+        JsonObject node = getPageNode(getPage(pageUID), nodeUID);
+        if (node != null && node.has("questUID"))
+            return node.get("questUID").getAsString();
+        return "";
     }
 
     public static int[] getSecondaryPosForLineNode(String pageUID, String nodeUID)

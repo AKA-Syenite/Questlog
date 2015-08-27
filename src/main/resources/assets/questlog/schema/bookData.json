@@ -18,6 +18,9 @@
                 "uid": {
                   "type": "string"
                 },
+                "questUID": {
+                  "type": "string"
+                },
                 "x": {
                   "type": "integer"
                 },
@@ -40,6 +43,7 @@
               "additionalProperties": false,
               "required": [
                 "uid",
+                "questUID",
                 "x",
                 "y",
                 "parents",

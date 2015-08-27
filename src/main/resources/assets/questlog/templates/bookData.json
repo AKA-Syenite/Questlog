@@ -5,6 +5,7 @@
       "questNodes": [
         {
           "uid": "",
+          "questUID": "",
           "x": 0,
           "y": 0,
           "parents": [

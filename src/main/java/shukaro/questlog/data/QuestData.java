@@ -56,7 +56,10 @@ public class QuestData
             data = new JsonArray();
         }
         else
+        {
             Questlog.logger.info("Sucessfully validated quest data");
+            save();
+        }
     }
 
     public static void load() throws IOException
