@@ -92,11 +92,14 @@ public class BookData
         return null;
     }
 
-    public static ArrayList<String> getPages()
+    public static ArrayList<String> getPageIDs()
     {
         ArrayList<String> out = new ArrayList<String>();
         for (int i=0; i<data.size(); i++)
-            out.add(data.get(i).getAsJsonObject().get("uid").getAsString());
+        {
+            if (data.get(i).getAsJsonObject().get("uid").getAsString().length() > 0)
+                out.add(data.get(i).getAsJsonObject().get("uid").getAsString());
+        }
         return out;
     }
 
@@ -252,7 +255,7 @@ public class BookData
         return true;
     }
 
-    protected static JsonArray getNodesOnPage(JsonObject page)
+    protected static JsonArray getAllNodesOnPage(JsonObject page)
     {
         JsonArray temp = new JsonArray();
         temp.addAll(page.getAsJsonArray("questNodes"));
@@ -261,18 +264,45 @@ public class BookData
         return temp;
     }
 
-    public static ArrayList<String> getNodeIDsOnPage(String pageUID)
+    public static ArrayList<String> getAllNodeIDsOnPage(String pageUID)
     {
-        JsonObject node = getPage(pageUID);
+        JsonObject page = getPage(pageUID);
         ArrayList<String> out = new ArrayList<String>();
-        for (JsonElement e : getNodesOnPage(node))
+        for (JsonElement e : getAllNodesOnPage(page))
             out.add(((JsonObject)e).get("uid").getAsString());
+        return out;
+    }
+
+    public static ArrayList<String> getQuestNodeIDsOnPage(String pageUID)
+    {
+        JsonObject page = getPage(pageUID);
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : page.getAsJsonArray("questNodes"))
+            out.add(e.getAsJsonObject().get("uid").getAsString());
+        return out;
+    }
+
+    public static ArrayList<String> getPageNodeIDsOnPage(String pageUID)
+    {
+        JsonObject page = getPage(pageUID);
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : page.getAsJsonArray("pageNodes"))
+            out.add(e.getAsJsonObject().get("uid").getAsString());
+        return out;
+    }
+
+    public static ArrayList<String> getLineNodeIDsOnPage(String pageUID)
+    {
+        JsonObject page = getPage(pageUID);
+        ArrayList<String> out = new ArrayList<String>();
+        for (JsonElement e : page.getAsJsonArray("pageNodes"))
+            out.add(e.getAsJsonObject().get("uid").getAsString());
         return out;
     }
 
     protected static JsonObject getNodeOnPage(JsonObject page, String uid)
     {
-        for (JsonElement node : getNodesOnPage(page))
+        for (JsonElement node : getAllNodesOnPage(page))
         {
             if (node.getAsJsonObject().get("uid").getAsString().equals(uid))
                 return node.getAsJsonObject();
