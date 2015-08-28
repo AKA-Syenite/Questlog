@@ -14,8 +14,6 @@ import java.util.List;
 
 public class CommandList implements ISubCommand
 {
-    public static final List<String> targets = Arrays.asList("quests", "pages", "questNodes", "pageNodes", "lineNodes");
-
     @Override
     public int getPermissionLevel()
     {
@@ -35,7 +33,7 @@ public class CommandList implements ISubCommand
         {
             String target = args[1];
             Iterable<String> idList = null;
-            if (targets.contains(target) && args.length == 3)
+            if (CommandHandler.targets.contains(target) && args.length == 3)
             {
                 if (BookData.getPage(args[2]) == null)
                 {
@@ -82,7 +80,7 @@ public class CommandList implements ISubCommand
                 }
                 sender.addChatMessage(new ChatComponentText(StringHelper.WHITE + StringHelper.localize("command.questlog.total") + " " + StringHelper.YELLOW + i));
             }
-            else if (target.contains(args[1]))
+            else if (CommandHandler.targets.contains(target))
                 throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
             else
                 throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
@@ -96,7 +94,7 @@ public class CommandList implements ISubCommand
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 2)
-            return CommandBase.getListOfStringsMatchingLastWord(args, targets.toArray(new String[targets.size()]));
+            return CommandBase.getListOfStringsMatchingLastWord(args, CommandHandler.targets.toArray(new String[CommandHandler.targets.size()]));
         return null;
     }
 }

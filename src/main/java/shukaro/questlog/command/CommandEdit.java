@@ -18,8 +18,6 @@ import java.util.List;
 
 public class CommandEdit implements ISubCommand
 {
-    public static final List<String> targets = Arrays.asList("quest", "page", "questNode", "pageNode", "lineNode");
-
     public static final List<String> questTargets = Arrays.asList("uid", "objectives", "rewards", "tags");
     public static final List<String> pageTargets = Arrays.asList("uid");
     public static final List<String> questNodeTargets = Arrays.asList("pageUID", "nodeUID", "questUID", "x", "y", "parents", "tags");
@@ -371,8 +369,10 @@ public class CommandEdit implements ISubCommand
                 node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(newTags)).getAsJsonArray());
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.updatednode")));
             }
-            else
+            else if (CommandHandler.targets.contains(args[1]))
                 throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
+            else
+                throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
         }
         else
             throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
@@ -383,8 +383,8 @@ public class CommandEdit implements ISubCommand
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 2)
-            return CommandBase.getListOfStringsMatchingLastWord(args, targets.toArray(new String[targets.size()]));
-        else if (args.length == 3 && targets.contains(args[1]))
+            return CommandBase.getListOfStringsMatchingLastWord(args, CommandHandler.targets.toArray(new String[CommandHandler.targets.size()]));
+        else if (args.length == 3 && CommandHandler.targets.contains(args[1]))
         {
             if (args[1].equals("quest"))
                 return CommandBase.getListOfStringsMatchingLastWord(args, questTargets.toArray(new String[questTargets.size()]));

@@ -10,13 +10,10 @@ import net.minecraft.util.ChatComponentText;
 import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.QuestData;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CommandDelete implements ISubCommand
 {
-    public static final List<String> targets = Arrays.asList("quest", "page", "questNode", "pageNode", "lineNode");
-
     @Override
     public int getPermissionLevel()
     {
@@ -117,7 +114,7 @@ public class CommandDelete implements ISubCommand
                     }
                 }
             }
-            else if (target.contains(args[1]))
+            else if (CommandHandler.targets.contains(target))
                 throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
             else
                 throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
@@ -131,7 +128,7 @@ public class CommandDelete implements ISubCommand
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 2)
-            return CommandBase.getListOfStringsMatchingLastWord(args, targets.toArray(new String[targets.size()]));
+            return CommandBase.getListOfStringsMatchingLastWord(args, CommandHandler.targets.toArray(new String[CommandHandler.targets.size()]));
         return null;
     }
 }

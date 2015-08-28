@@ -8,6 +8,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandNotFoundException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +27,7 @@ import java.util.Set;
 public class CommandHandler extends CommandBase
 {
     private static TMap<String, ISubCommand> commands = new THashMap<String, ISubCommand>();
+    public static final List<String> targets = Arrays.asList("quest", "page", "questNode", "pageNode", "lineNode");
 
     static
     {

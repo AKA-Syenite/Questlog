@@ -25,17 +25,60 @@ command.questlog.updatedquest=Updated quest.
 command.questlog.updatedpage=Updated page.
 command.questlog.updatednode=Updated node.
 
+command.questlog.term.uid=Unique ID.
+command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
+command.questlog.term.page=Uniquely identified set of nodes. Contains any number of quest, page, or line nodes.
+command.questlog.term.questNode=Node linked to a quest and its completion status.
+command.questlog.term.pageNode=Node which changes displayed page to its target.
+command.questlog.term.lineNode=Node which defines a line from one point to another on a page.
+command.questlog.term.entryType=quest, page, questNode, pageNode, or lineNode.
+
+command.questlog.objectives.syntax=objectiveA(arg1,arg2,arg3);objectiveB(arg1);objectiveC()
+command.questlog.rewards.syntax=rewardA(arg1,arg2);rewardB(arg1,arg2,arg3)
+command.questlog.tags.syntax=tagA;tagB;tagC
+command.questlog.parents.syntax=nodeUID_1;nodeUID_2
+
 command.questlog.version=Gives you the version of this mod.
-command.questlog.version.syntax=/questlog version
+command.questlog.version.syntax=/questlog §eversion§r
 
 command.questlog.help=Displays help information.
-command.questlog.help.syntax=/questlog help [command]
+command.questlog.help.syntax=/questlog §ehelp§r §l[command]§r
 
 command.questlog.syntax=Displays syntax information.
-command.questlog.syntax.syntax=/questlog syntax [command]
+command.questlog.syntax.syntax=/questlog §esyntax§r §l[command]§r
 
-command.questlog.newQuest=Defines a new quest.
-command.questlog.newQuest.syntax=/questlog newQuest [questUID] [objective1(arg1,arg2);objective2(arg1)] [reward1(arg1);reward2(arg1,arg2)] [tag1;tag2]
+command.questlog.new=Creates new entries.
+command.questlog.new.syntax=/questlog §enew§r §lentryType args§r
 
-command.questlog.deleteQuest=Deletes a quest.
-command.questlog.deleteQuest.syntax=/questlog deleteQuest [questUID]
+command.questlog.new.quest.syntax=/questlog §enew quest§r §luid objectives rewards tags§r
+command.questlog.new.page.syntax=/questlog §enew page§r §luid§r
+command.questlog.new.questNode.syntax=/questlog §enew questNode§r §lpageUID nodeUID questUID x y parents tags§r
+command.questlog.new.pageNode.syntax=/questlog §enew pageNode§r §lpageUID nodeUID targetUID x y parents tags§r
+command.questlog.new.lineNode.syntax=/questlog §enew lineNode§r §lpageUID nodeUID x y x2 y2 parents tags§r
+
+command.questlog.delete=Deletes entries.
+command.questlog.delete.syntax=/questlog §edelete§r §lentryType [pageUID] uid§r
+
+command.questlog.delete.quest.syntax=/questlog §edelete quest§r §luid§r
+command.questlog.delete.page.syntax=/questlog §edelete page§r §luid§r
+command.questlog.delete.questNode.syntax=/questlog §edelete questNode§r §lpageUID nodeUID§r
+command.questlog.delete.pageNode.syntax=/questlog §edelete pageNode§r §lpageUID nodeUID§r
+command.questlog.delete.lineNode.syntax=/questlog §edelete lineNode§r §lpageUID nodeUID§r
+
+command.questlog.list=Lists and filters entries.
+command.questlog.list.syntax=/questlog §elist§r §lentryType [pattern]§r
+
+command.questlog.list.quest.syntax=/questlog §elist quests§r §l[pattern]§r
+command.questlog.list.page.syntax=/questlog §elist pages§r §l[pattern]§r
+command.questlog.list.questNode.syntax=/questlog §elist questNodes§r §lpageUID§r §l[pattern]§r
+command.questlog.list.pageNode.syntax=/questlog §elist pageNodes§r §lpageUID§r §l[pattern]§r
+command.questlog.list.lineNode.syntax=/questlog §elist lineNodes§r §lpageUID§r §l[pattern]§r
+
+command.questlog.edit=Edits entry properties.
+command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid §lnewValue§r
+
+command.questlog.edit.quest.syntax=/questlog §eedit quest§r §lproperty newValue§r
+command.questlog.edit.page.syntax=/questlog §eedit page§r §lproperty newValue§r
+command.questlog.edit.questNode.syntax=/questlog §eedit questNode§r §lproperty pageUID nodeUID newValue§r
+command.questlog.edit.pageNode.syntax=/questlog §eedit pageNode§r §lproperty pageUID nodeUID newValue§r
+command.questlog.edit.lineNode.syntax=/questlog §eedit lineNode§r §lproperty pageUID nodeUID newValue§r
