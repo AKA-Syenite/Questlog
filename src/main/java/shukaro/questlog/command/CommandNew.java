@@ -35,9 +35,9 @@ public class CommandNew implements ISubCommand
             if (target.equals("quest") && args.length == 6)
             {
                 String questUID = args[2];
-                String[] objectives = args[3].split(";");
-                String[] rewards = args[4].split(";");
-                String[] tags = args[5].split(";");
+                String[] objectives = CommandHandler.nullSynonyms.contains(args[3]) ? new String[]{""} : args[3].split(";");
+                String[] rewards = CommandHandler.nullSynonyms.contains(args[4]) ? new String[]{""} : args[4].split(";");
+                String[] tags = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 if (QuestData.getQuest(questUID) != null)
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.uidtaken")));
                 else
@@ -71,8 +71,8 @@ public class CommandNew implements ISubCommand
                 String questUID = args[4];
                 String xs = args[5];
                 String ys = args[6];
-                String[] parents = args[7].split(";");
-                String[] tags = args[8].split(";");
+                String[] parents = CommandHandler.nullSynonyms.contains(args[7]) ? new String[]{""} : args[7].split(";");
+                String[] tags = CommandHandler.nullSynonyms.contains(args[8]) ? new String[]{""} : args[8].split(";");
                 int x;
                 int y;
                 try
@@ -107,8 +107,8 @@ public class CommandNew implements ISubCommand
                 String targetUID = args[4];
                 String xs = args[5];
                 String ys = args[6];
-                String[] parents = args[7].split(";");
-                String[] tags = args[8].split(";");
+                String[] parents = CommandHandler.nullSynonyms.contains(args[7]) ? new String[]{""} : args[7].split(";");
+                String[] tags = CommandHandler.nullSynonyms.contains(args[8]) ? new String[]{""} : args[8].split(";");
                 int x;
                 int y;
                 try
@@ -144,8 +144,8 @@ public class CommandNew implements ISubCommand
                 String ys = args[5];
                 String x2s = args[6];
                 String y2s = args[7];
-                String[] parents = args[8].split(";");
-                String[] tags = args[9].split(";");
+                String[] parents = CommandHandler.nullSynonyms.contains(args[8]) ? new String[]{""} : args[8].split(";");
+                String[] tags = CommandHandler.nullSynonyms.contains(args[9]) ? new String[]{""} : args[9].split(";");
                 int x;
                 int y;
                 int x2;

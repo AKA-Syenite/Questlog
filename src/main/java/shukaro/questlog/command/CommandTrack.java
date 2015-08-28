@@ -122,6 +122,10 @@ public class CommandTrack implements ISubCommand
                 return;
             }
             PlayerData.setTrackingQuest(targetUUID, questUID, !PlayerData.isTrackingQuest(targetUUID, questUID));
+            if (ServerHelper.isMultiPlayerServer())
+            {
+                //sync
+            }
         }
         else
             throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");

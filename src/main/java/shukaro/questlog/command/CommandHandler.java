@@ -28,6 +28,7 @@ public class CommandHandler extends CommandBase
 {
     private static TMap<String, ISubCommand> commands = new THashMap<String, ISubCommand>();
     public static final List<String> targets = Arrays.asList("quest", "page", "questNode", "pageNode", "lineNode");
+    public static final List<String> nullSynonyms = Arrays.asList("null", "\"\"", "''", "[]", "()", "{}");
 
     static
     {
@@ -39,6 +40,7 @@ public class CommandHandler extends CommandBase
         registerSubCommand(new CommandDelete());
         registerSubCommand(new CommandEdit());
         registerSubCommand(new CommandTrack());
+        registerSubCommand(new CommandGet());
     }
 
     public static boolean registerSubCommand(ISubCommand subCommand)

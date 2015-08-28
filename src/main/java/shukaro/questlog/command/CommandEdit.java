@@ -79,7 +79,7 @@ public class CommandEdit implements ISubCommand
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid")));
                     return;
                 }
-                QuestData.setQuestObjectives(args[3], args[4].split(";"));
+                QuestData.setQuestObjectives(args[3], CommandHandler.nullSynonyms.contains(args[4]) ? new String[]{""} : args[4].split(";"));
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.updatedquest")));
             }
             else if (args[2].equals("rewards"))
@@ -89,7 +89,7 @@ public class CommandEdit implements ISubCommand
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid")));
                     return;
                 }
-                QuestData.setQuestRewards(args[3], args[4].split(";"));
+                QuestData.setQuestRewards(args[3], CommandHandler.nullSynonyms.contains(args[4]) ? new String[]{""} : args[4].split(";"));
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.updatedquest")));
             }
             else if (args[2].equals("tags"))
@@ -99,7 +99,7 @@ public class CommandEdit implements ISubCommand
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid")));
                     return;
                 }
-                QuestData.setQuestTags(args[3], args[4].split(";"));
+                QuestData.setQuestTags(args[3], CommandHandler.nullSynonyms.contains(args[4]) ? new String[]{""} : args[4].split(";"));
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.updatedquest")));
             }
             else
@@ -183,7 +183,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newParents = args[5].split(";");
+                String[] newParents = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("parents");
                 node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(newParents)).getAsJsonArray());
@@ -193,7 +193,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newTags = args[5].split(";");
+                String[] newTags = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("tags");
                 node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(newTags)).getAsJsonArray());
@@ -263,7 +263,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newParents = args[5].split(";");
+                String[] newParents = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("parents");
                 node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(newParents)).getAsJsonArray());
@@ -273,7 +273,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newTags = args[5].split(";");
+                String[] newTags = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("tags");
                 node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(newTags)).getAsJsonArray());
@@ -353,7 +353,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newParents = args[5].split(";");
+                String[] newParents = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("parents");
                 node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(newParents)).getAsJsonArray());
@@ -363,7 +363,7 @@ public class CommandEdit implements ISubCommand
             {
                 String homePage = args[3];
                 String nodeUID = args[4];
-                String[] newTags = args[5].split(";");
+                String[] newTags = CommandHandler.nullSynonyms.contains(args[5]) ? new String[]{""} : args[5].split(";");
                 JsonObject node = BookData.getNodeOnPage(homePage, nodeUID);
                 node.remove("tags");
                 node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(newTags)).getAsJsonArray());

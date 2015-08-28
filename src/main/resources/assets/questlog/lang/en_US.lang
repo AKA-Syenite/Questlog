@@ -28,6 +28,19 @@ command.questlog.onlyplayers=Only players may use this command without a name ar
 command.questlog.tracking=Tracked Quests:
 command.questlog.canttrack=Cannot track that quest.
 command.questlog.nosuchplayer=No such player.
+command.questlog.uid=UID:
+command.questlog.objectives=Objectives:
+command.questlog.rewards=Rewards:
+command.questlog.tags=Tags:
+command.questlog.questnodes=Quest Nodes:
+command.questlog.pagenodes=Page Nodes:
+command.questlog.linenodes=Line Nodes:
+command.questlog.questuid=Quest UID:
+command.questlog.x=X Coordinate:
+command.questlog.y=Y Coordinate:
+command.questlog.x2=Secondary X Coordinate:
+command.questlog.y2=Secondary Y Coordinate:
+command.questlog.target=Target Page:
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
@@ -37,10 +50,10 @@ command.questlog.term.pageNode=Node which changes displayed page to its target.
 command.questlog.term.lineNode=Node which defines a line from one point to another on a page.
 command.questlog.term.entryType=quest, page, questNode, pageNode, or lineNode.
 
-command.questlog.objectives.syntax=objectiveA(arg1,arg2,arg3);objectiveB(arg1);objectiveC()
-command.questlog.rewards.syntax=rewardA(arg1,arg2);rewardB(arg1,arg2,arg3)
-command.questlog.tags.syntax=tagA;tagB;tagC
-command.questlog.parents.syntax=nodeUID_1;nodeUID_2
+command.questlog.objectives.syntax=objectiveA(arg1,arg2,arg3);objectiveB(arg1);objectiveC() OR null
+command.questlog.rewards.syntax=rewardA(arg1,arg2);rewardB(arg1,arg2,arg3) OR null
+command.questlog.tags.syntax=tagA;tagB;tagC OR null
+command.questlog.parents.syntax=nodeUID_1;nodeUID_2 OR null
 
 command.questlog.version=Gives you the version of this mod.
 command.questlog.version.syntax=/questlog §eversion§r
@@ -79,7 +92,7 @@ command.questlog.list.pageNode.syntax=/questlog §elist pageNodes§r §lpageUID�
 command.questlog.list.lineNode.syntax=/questlog §elist lineNodes§r §lpageUID§r §l[pattern]§r
 
 command.questlog.edit=Edits entry properties.
-command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid §lnewValue§r
+command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid lnewValue§r
 
 command.questlog.edit.quest.syntax=/questlog §eedit quest§r §lproperty newValue§r
 command.questlog.edit.page.syntax=/questlog §eedit page§r §lproperty newValue§r
@@ -89,3 +102,12 @@ command.questlog.edit.lineNode.syntax=/questlog §eedit lineNode§r §lproperty 
 
 command.questlog.track=Handles quest tracking.
 command.questlog.track.syntax=/questlog §etrack§r §l[questUID] [player]§r
+
+command.questlog.get=Displays entry information.
+command.questlog.get.syntax=/questlog §eget§r §lentryType [pageUID] uid§r
+
+command.questlog.get.quest.syntax=/questlog §eget quest§r §luid§r
+command.questlog.get.page.syntax=/questlog §eget page§r §luid§r
+command.questlog.get.questNode.syntax=/questlog §eget questNode§r §lpageUID uid§r
+command.questlog.get.pageNode.syntax=/questlog §eget pageNode§r §lpageUID uid§r
+command.questlog.get.lineNode.syntax=/questlog §eget lineNode§r §lpageUID uid§r

@@ -85,7 +85,7 @@ public class BookData
     {
         for (int i=0; i<data.size(); i++)
         {
-            if (data.get(i).getAsJsonObject().get("uid").toString().equals("uid"))
+            if (data.get(i).getAsJsonObject().get("uid").getAsString().equals(uid))
                 return data.get(i).getAsJsonObject();
         }
         return null;
@@ -175,6 +175,14 @@ public class BookData
             node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
             node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
             getPage(pageUID).getAsJsonArray("questNodes").add(node);
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             return true;
         }
     }
@@ -193,6 +201,14 @@ public class BookData
             node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
             node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
             getPage(pageUID).getAsJsonArray("pageNodes").add(node);
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             return true;
         }
     }
@@ -212,6 +228,14 @@ public class BookData
             node.add("parents", Questlog.parser.parse(Questlog.gson.toJson(parents)).getAsJsonArray());
             node.add("tags", Questlog.parser.parse(Questlog.gson.toJson(tags)).getAsJsonArray());
             getPage(pageUID).getAsJsonArray("lineNodes").add(node);
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
             return true;
         }
     }
@@ -230,6 +254,14 @@ public class BookData
         }
         page.remove("questNodes");
         page.add("questNodes", newNodes);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -247,6 +279,14 @@ public class BookData
         }
         page.remove("pageNodes");
         page.add("pageNodes", newNodes);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return true;
     }
 
@@ -264,6 +304,14 @@ public class BookData
         }
         page.remove("lineNodes");
         page.add("lineNodes", newNodes);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
         return true;
     }
 
