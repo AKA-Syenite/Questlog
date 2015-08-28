@@ -26,4 +26,10 @@ public abstract class AbstractObjective
      * @return Args that can be passed into start(String[]) to resume quest tracking
      */
     public abstract String[] saveToStringArray();
+
+    /**
+     * Gets the full localized text of the objective (IE "Craft Torches 0/16", "Submit Bear Asses 12/100")
+     * @return a localized string
+     */
+    public abstract String getLocalizedText();
 }

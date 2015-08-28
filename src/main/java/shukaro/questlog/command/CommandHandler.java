@@ -38,6 +38,7 @@ public class CommandHandler extends CommandBase
         registerSubCommand(new CommandNew());
         registerSubCommand(new CommandDelete());
         registerSubCommand(new CommandEdit());
+        registerSubCommand(new CommandTrack());
     }
 
     public static boolean registerSubCommand(ISubCommand subCommand)

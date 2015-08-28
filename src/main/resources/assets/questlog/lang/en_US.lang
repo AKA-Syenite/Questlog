@@ -24,6 +24,10 @@ command.questlog.total=Total:
 command.questlog.updatedquest=Updated quest.
 command.questlog.updatedpage=Updated page.
 command.questlog.updatednode=Updated node.
+command.questlog.onlyplayers=Only players may use this command without a name argument.
+command.questlog.tracking=Tracked Quests:
+command.questlog.canttrack=Cannot track that quest.
+command.questlog.nosuchplayer=No such player.
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
@@ -45,7 +49,7 @@ command.questlog.help=Displays help information.
 command.questlog.help.syntax=/questlog §ehelp§r §l[command]§r
 
 command.questlog.syntax=Displays syntax information.
-command.questlog.syntax.syntax=/questlog §esyntax§r §l[command]§r
+command.questlog.syntax.syntax=/questlog §esyntax§r §l[command] [entryType]§r
 
 command.questlog.new=Creates new entries.
 command.questlog.new.syntax=/questlog §enew§r §lentryType args§r
@@ -82,3 +86,6 @@ command.questlog.edit.page.syntax=/questlog §eedit page§r §lproperty newValue
 command.questlog.edit.questNode.syntax=/questlog §eedit questNode§r §lproperty pageUID nodeUID newValue§r
 command.questlog.edit.pageNode.syntax=/questlog §eedit pageNode§r §lproperty pageUID nodeUID newValue§r
 command.questlog.edit.lineNode.syntax=/questlog §eedit lineNode§r §lproperty pageUID nodeUID newValue§r
+
+command.questlog.track=Handles quest tracking.
+command.questlog.track.syntax=/questlog §etrack§r §l[questUID] [player]§r

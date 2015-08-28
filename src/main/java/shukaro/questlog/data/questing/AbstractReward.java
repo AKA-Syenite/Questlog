@@ -10,4 +10,10 @@ public abstract class AbstractReward
      * @param args any parameters needed by the reward
      */
     public abstract void give(UUID player, String[] args);
+
+    /**
+     * Gets the full localized text of the reward (IE "64 Blocks of Diamond" or something)
+     * @return a localized string
+     */
+    public abstract String getLocalizedText();
 }

@@ -85,7 +85,7 @@ public class QuestData
     {
         for (int i=0; i<data.size(); i++)
         {
-            if (data.get(i).getAsJsonObject().get("uid").getAsString().equals("uid"))
+            if (data.get(i).getAsJsonObject().get("uid").getAsString().equals(uid))
                 return data.get(i).getAsJsonObject();
         }
         return null;
