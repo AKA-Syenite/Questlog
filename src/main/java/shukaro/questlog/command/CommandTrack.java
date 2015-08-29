@@ -9,6 +9,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
@@ -97,12 +98,15 @@ public class CommandTrack implements ISubCommand
             String questUID = args[1];
             String playerName = args[2];
             EntityPlayer player = null;
-            for (EntityPlayer p : (List<EntityPlayer>)sender.getEntityWorld().playerEntities)
+            for (World world : MinecraftServer.getServer().worldServers)
             {
-                if (p.getDisplayName().equals(playerName))
+                for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
                 {
-                    player = p;
-                    break;
+                    if (p.getDisplayName().equals(playerName))
+                    {
+                        player = p;
+                        break;
+                    }
                 }
             }
             if (player == null)

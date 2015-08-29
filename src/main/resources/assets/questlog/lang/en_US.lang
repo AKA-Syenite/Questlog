@@ -92,7 +92,7 @@ command.questlog.list.pageNode.syntax=/questlog §elist pageNodes§r §lpageUID�
 command.questlog.list.lineNode.syntax=/questlog §elist lineNodes§r §lpageUID§r §l[pattern]§r
 
 command.questlog.edit=Edits entry properties.
-command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid lnewValue§r
+command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid §lnewValue§r
 
 command.questlog.edit.quest.syntax=/questlog §eedit quest§r §lproperty newValue§r
 command.questlog.edit.page.syntax=/questlog §eedit page§r §lproperty newValue§r
@@ -111,3 +111,6 @@ command.questlog.get.page.syntax=/questlog §eget page§r §luid§r
 command.questlog.get.questNode.syntax=/questlog §eget questNode§r §lpageUID uid§r
 command.questlog.get.pageNode.syntax=/questlog §eget pageNode§r §lpageUID uid§r
 command.questlog.get.lineNode.syntax=/questlog §eget lineNode§r §lpageUID uid§r
+
+command.questlog.quest=Add or remove quests from players.
+command.questlog.quest.syntax=/questlog §eadd/remove§r §lplayer questUID§r
