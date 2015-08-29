@@ -1,6 +1,7 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
+import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
@@ -63,9 +65,21 @@ public class CommandQuest implements ISubCommand
             if (playerUUID != null)
             {
                 if (op.equals("add"))
+                {
                     PlayerData.giveQuest(playerUUID, questUID);
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
+                }
                 else if (op.equals("remove"))
+                {
                     PlayerData.removeQuest(playerUUID, questUID);
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
+                }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");
             }

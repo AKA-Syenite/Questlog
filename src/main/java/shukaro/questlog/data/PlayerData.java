@@ -116,6 +116,8 @@ public class PlayerData
             newPlayer.add("uuid", new JsonPrimitive(playerUUID.toString()));
             newPlayer.add("groups", new JsonArray());
             newPlayer.add("leading", new JsonArray());
+            newPlayer.add("scores", new JsonArray());
+            newPlayer.add("collectibles", new JsonArray());
             newPlayer.add("quests", new JsonArray());
             data.add(newPlayer);
             player = newPlayer;
@@ -284,6 +286,73 @@ public class PlayerData
                 quest.add("complete", new JsonPrimitive(complete ? "true" : "false"));
             }
         }
+    }
+
+    public static String[] getScores(UUID playerUUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        String[] out = null;
+        int numScores = player.getAsJsonArray("scores").size();
+        if (numScores > 0)
+        {
+            out = new String[numScores];
+            for (int i=0; i<numScores; i++)
+            {
+                out[i] = player.getAsJsonArray("scores").get(i).getAsString();
+                i++;
+            }
+        }
+        return out;
+    }
+
+    public static int getScore(UUID playerUUID, String score)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        JsonElement e;
+        Iterator<JsonElement> scoreIT = player.getAsJsonArray("scores").iterator();
+        while (scoreIT.hasNext())
+        {
+            e = scoreIT.next();
+            if (e.getAsString().split(":").length != 2 || !e.getAsString().split(":")[1].matches("[0-9]*"))
+                continue;
+            if (e.getAsString().split(":")[0].equals(score))
+                return Integer.parseInt(e.getAsString().split(":")[1]);
+        }
+        return 0;
+    }
+
+    public static int modScore(UUID playerUUID, String score, int amount)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        JsonElement e;
+        Iterator<JsonElement> scoreIT = player.getAsJsonArray("scores").iterator();
+        while (scoreIT.hasNext())
+        {
+            e = scoreIT.next();
+            if (e.getAsString().split(":").length != 2 || !e.getAsString().split(":")[1].matches("[0-9]*"))
+                continue;
+            if (e.getAsString().split(":")[0].equals(score))
+            {
+                int newVal = Integer.parseInt(e.getAsString().split(":")[1]) + amount;
+                scoreIT.remove();
+                player.getAsJsonArray("scores").add(new JsonPrimitive(score + ":" + newVal));
+                return newVal;
+            }
+        }
+        return 0;
+    }
+
+    public static ArrayList<String> getCollectibles(UUID playerUUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        ArrayList<String> out = new ArrayList<String>();
+        int numCollectibles = player.getAsJsonArray("collectibles").size();
+        if (numCollectibles > 0)
+        {
+            for (int i=0; i<numCollectibles; i++)
+                out.add(player.getAsJsonArray("collectibles").get(i).getAsString());
+        }
+        return out;
     }
 
     public static String[] getPlayerGroups(UUID playerUUID)

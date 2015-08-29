@@ -113,4 +113,4 @@ command.questlog.get.pageNode.syntax=/questlog §eget pageNode§r §lpageUID uid
 command.questlog.get.lineNode.syntax=/questlog §eget lineNode§r §lpageUID uid§r
 
 command.questlog.quest=Add or remove quests from players.
-command.questlog.quest.syntax=/questlog §eadd/remove§r §lplayer questUID§r
+command.questlog.quest.syntax=/questlog §equest add/remove§r §lplayer questUID§r

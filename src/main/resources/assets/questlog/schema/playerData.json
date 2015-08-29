@@ -22,6 +22,18 @@
               "type": "string"
             }
           },
+          "scores": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "collectibles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "quests": {
             "type": "array",
             "items": {
@@ -58,6 +70,8 @@
           "uuid",
           "groups",
           "leading",
+          "scores",
+          "collectibles",
           "quests"
         ]
       }
