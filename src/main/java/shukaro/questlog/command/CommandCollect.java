@@ -10,7 +10,7 @@ public class CommandCollect implements ISubCommand
     @Override
     public int getPermissionLevel()
     {
-        return 0;
+        return 2;
     }
 
     @Override

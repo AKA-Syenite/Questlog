@@ -71,6 +71,7 @@ public class CommandScore implements ISubCommand
                     }
                     UUID targetUUID = player.getPersistentID();
                     PlayerData.modScore(targetUUID, scoreUID, intAmount);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.scoremod")));
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
@@ -100,6 +101,65 @@ public class CommandScore implements ISubCommand
                     }
                     UUID targetUUID = player.getPersistentID();
                     PlayerData.deleteScore(targetUUID, scoreUID);
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.scoredelete")));
+                }
+                else
+                    throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
+            }
+            else if (args[1].equals("get"))
+            {
+                if (args.length == 3)
+                {
+                    String playerName = args[2];
+                    EntityPlayer player = null;
+                    for (World world : MinecraftServer.getServer().worldServers)
+                    {
+                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
+                        {
+                            if (p.getDisplayName().equals(playerName))
+                            {
+                                player = p;
+                                break;
+                            }
+                        }
+                    }
+                    if (player == null)
+                    {
+                        sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
+                        return;
+                    }
+                    UUID targetUUID = player.getPersistentID();
+                    if (PlayerData.getScores(targetUUID) == null)
+                    {
+                        sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.noscores")));
+                        return;
+                    }
+                    for (String s : PlayerData.getScores(targetUUID))
+                        sender.addChatMessage(new ChatComponentText(s.split(":")[0] + ": " + StringHelper.LIGHT_BLUE + s.split(":")[1] + StringHelper.END));
+                }
+                else if (args.length == 4)
+                {
+                    String scoreUID = args[2];
+                    String playerName = args[3];
+                    EntityPlayer player = null;
+                    for (World world : MinecraftServer.getServer().worldServers)
+                    {
+                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
+                        {
+                            if (p.getDisplayName().equals(playerName))
+                            {
+                                player = p;
+                                break;
+                            }
+                        }
+                    }
+                    if (player == null)
+                    {
+                        sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
+                        return;
+                    }
+                    UUID targetUUID = player.getPersistentID();
+                    sender.addChatMessage(new ChatComponentText(StringHelper.LIGHT_BLUE + PlayerData.getScore(targetUUID, scoreUID) + StringHelper.END));
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
@@ -115,7 +175,9 @@ public class CommandScore implements ISubCommand
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         if (args.length == 2)
-            return CommandBase.getListOfStringsMatchingLastWord(args, "mod", "delete");
+            return CommandBase.getListOfStringsMatchingLastWord(args, "get", "mod", "delete");
+        if (args.length == 4 || (args.length == 3 && args[1].equals("get")))
+            return CommandBase.getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
         return null;
     }
 }

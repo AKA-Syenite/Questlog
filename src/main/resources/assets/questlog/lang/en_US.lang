@@ -42,6 +42,9 @@ command.questlog.y=Y Coordinate:
 command.questlog.x2=Secondary X Coordinate:
 command.questlog.y2=Secondary Y Coordinate:
 command.questlog.target=Target Page:
+command.questlog.scoremod=Score Modified.
+command.questlog.scoredelete=Deleted Score.
+command.questlog.noscores=Player has no scores.
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
@@ -114,10 +117,11 @@ command.questlog.get.pageNode.syntax=/questlog §eget pageNode§r §lpageUID uid
 command.questlog.get.lineNode.syntax=/questlog §eget lineNode§r §lpageUID uid§r
 
 command.questlog.quest=Add or remove quests from players.
-command.questlog.quest.syntax=/questlog §equest add/remove§r §lplayer questUID§r
+command.questlog.quest.syntax=/questlog §equest§r §loperation player questUID§r
 
 command.questlog.score=Manipulates player quest scores.
-command.questlog.score.syntax=/questlog §escore mod/delete§r §lscoreUID [amount]§r
+command.questlog.score.syntax=/questlog §escore§r §loperation scoreUID [player] [amount]§r
 
-command.questlog.score.mod.syntax=/questlog §escore mod§r §lscoreUID amount§r
-command.questlog.score.delete.syntax=/questlog §escore delete§r §lscoreUID§r
+command.questlog.score.mod.syntax=/questlog §escore mod§r §lscoreUID player amount§r
+command.questlog.score.delete.syntax=/questlog §escore delete§r §lscoreUID player§r
+command.questlog.score.get.syntax=/questlog §escore get§r §l[scoreUID] player§r
