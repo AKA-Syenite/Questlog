@@ -336,10 +336,46 @@ public class PlayerData
                 int newVal = Integer.parseInt(e.getAsString().split(":")[1]) + amount;
                 scoreIT.remove();
                 player.getAsJsonArray("scores").add(new JsonPrimitive(score + ":" + newVal));
+                try
+                {
+                    save();
+                }
+                catch (IOException x)
+                {
+                    x.printStackTrace();
+                }
                 return newVal;
             }
         }
-        return 0;
+        player.getAsJsonArray("scores").add(new JsonPrimitive(score + ":" + amount));
+        try
+        {
+            save();
+        }
+        catch (IOException x)
+        {
+            x.printStackTrace();
+        }
+        return amount;
+    }
+
+    public static boolean deleteScore(UUID playerUUID, String score)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        JsonElement e;
+        Iterator<JsonElement> scoreIT = player.getAsJsonArray("scores").iterator();
+        while (scoreIT.hasNext())
+        {
+            e = scoreIT.next();
+            if (e.getAsString().split(":").length != 2 || !e.getAsString().split(":")[1].matches("[0-9]*"))
+                continue;
+            if (e.getAsString().split(":")[0].equals(score))
+            {
+                scoreIT.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
     public static ArrayList<String> getCollectibles(UUID playerUUID)
@@ -353,6 +389,51 @@ public class PlayerData
                 out.add(player.getAsJsonArray("collectibles").get(i).getAsString());
         }
         return out;
+    }
+
+    public static boolean addCollectible(UUID playerUUID, String collectible)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        if (!getCollectibles(playerUUID).contains(collectible))
+        {
+            player.getAsJsonArray("collectibles").add(new JsonPrimitive(collectible));
+            try
+            {
+                save();
+            }
+            catch (IOException x)
+            {
+                x.printStackTrace();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean removeCollectible(UUID playerUUID, String collectible)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        ArrayList<String> collectibles = getCollectibles(playerUUID);
+        if (!collectibles.contains(collectible))
+            return false;
+        else
+        {
+            Iterator<JsonElement> colIT = player.getAsJsonArray("collectibles").iterator();
+            while (colIT.hasNext())
+            {
+                if (colIT.next().getAsString().equals(collectible))
+                    colIT.remove();
+            }
+            try
+            {
+                save();
+            }
+            catch (IOException x)
+            {
+                x.printStackTrace();
+            }
+            return true;
+        }
     }
 
     public static String[] getPlayerGroups(UUID playerUUID)

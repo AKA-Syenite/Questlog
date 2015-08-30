@@ -7,6 +7,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
 import shukaro.questlog.data.BookData;
+import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class CommandList implements ISubCommand
     @Override
     public int getPermissionLevel()
     {
-        return 2;
+        return 1;
     }
 
     @Override
