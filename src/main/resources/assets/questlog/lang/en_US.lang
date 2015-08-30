@@ -45,6 +45,11 @@ command.questlog.target=Target Page:
 command.questlog.scoremod=Score Modified.
 command.questlog.scoredelete=Deleted Score.
 command.questlog.noscores=Player has no scores.
+command.questlog.nocollectibles=Player has no collectibles.
+command.questlog.hascollectible=Player has that collectible.
+command.questlog.nothascollectible=Player does not have that collectible.
+command.questlog.addcollectible=Added collectible.
+command.questlog.removecollectible=Removed collectible.
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
@@ -125,3 +130,11 @@ command.questlog.score.syntax=/questlog §escore§r §loperation scoreUID [playe
 command.questlog.score.mod.syntax=/questlog §escore mod§r §lscoreUID player amount§r
 command.questlog.score.delete.syntax=/questlog §escore delete§r §lscoreUID player§r
 command.questlog.score.get.syntax=/questlog §escore get§r §l[scoreUID] player§r
+
+command.questlog.collect=Manipulates player collectible ownership.
+command.questlog.collect.syntax=/questlog §ecollect§r §loperation [collectible] [player]§r
+
+command.questlog.collect.list.syntax=/questlog §ecollect list§r §lplayer§r
+command.questlog.collect.has.syntax=/questlog §ecollect has§r §lcollectible player§r
+command.questlog.collect.add.syntax=/questlog §ecollect add§r §lcollectible player§r
+command.questlog.collect.remove.syntax=/questlog §ecollect remove§r §lcollectible player§r
