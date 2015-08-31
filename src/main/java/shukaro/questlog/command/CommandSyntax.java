@@ -25,6 +25,7 @@ public class CommandSyntax implements ISubCommand
         syntaxTips.put("rewards", "command.questlog.rewards.syntax");
         syntaxTips.put("tags", "command.questlog.tags.syntax");
         syntaxTips.put("parents", "command.questlog.parents.syntax");
+        syntaxTips.put("entryType", "command.questlog.entrytype.syntax");
     }
 
     @Override

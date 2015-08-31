@@ -1,7 +1,9 @@
 package shukaro.questlog.net;
 
 import cpw.mods.fml.common.event.*;
+import net.minecraftforge.common.MinecraftForge;
 import shukaro.questlog.QuestConfig;
+import shukaro.questlog.gui.GuiTracking;
 
 public class ClientProxy extends CommonProxy
 {
@@ -34,5 +36,6 @@ public class ClientProxy extends CommonProxy
     public void postInit(FMLPostInitializationEvent evt)
     {
         super.postInit(evt);
+        MinecraftForge.EVENT_BUS.register(new GuiTracking());
     }
 }

@@ -1,6 +1,7 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
+import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -52,18 +53,7 @@ public class CommandScore implements ISubCommand
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.notanumber")));
                         return;
                     }
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
@@ -72,6 +62,10 @@ public class CommandScore implements ISubCommand
                     UUID targetUUID = player.getPersistentID();
                     PlayerData.modScore(targetUUID, scoreUID, intAmount);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.scoremod")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
@@ -82,18 +76,7 @@ public class CommandScore implements ISubCommand
                 {
                     String scoreUID = args[2];
                     String playerName = args[3];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
@@ -102,6 +85,10 @@ public class CommandScore implements ISubCommand
                     UUID targetUUID = player.getPersistentID();
                     PlayerData.deleteScore(targetUUID, scoreUID);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.scoredelete")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
@@ -111,18 +98,7 @@ public class CommandScore implements ISubCommand
                 if (args.length == 3)
                 {
                     String playerName = args[2];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
@@ -141,18 +117,7 @@ public class CommandScore implements ISubCommand
                 {
                     String scoreUID = args[2];
                     String playerName = args[3];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));

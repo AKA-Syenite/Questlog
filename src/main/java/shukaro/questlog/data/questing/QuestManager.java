@@ -11,42 +11,70 @@ public class QuestManager
 {
     public static HashMap<UUID, ArrayList<AbstractObjective>> runningObjectives = new HashMap<UUID, ArrayList<AbstractObjective>>();
 
-    public static HashMap<AbstractObjective, String> objectiveRegistry = new HashMap<AbstractObjective, String>();
-    public static HashMap<AbstractReward, String> rewardRegistry = new HashMap<AbstractReward, String>();
+    public static HashMap<Class, String> objectiveRegistry = new HashMap<Class, String>();
+    public static HashMap<Class, String> rewardRegistry = new HashMap<Class, String>();
 
-    public static void instantiateObjectives(UUID playerUUID, String questUID)
+    public static boolean registerObjective(Class objectiveClass, String key, int numArgs)
     {
+        if (objectiveRegistry.containsKey(objectiveClass))
+            return false;
+        objectiveRegistry.put(objectiveClass, key + "[" + numArgs + "]");
+        return true;
+    }
+
+    public static boolean registerReward(Class rewardClass, String key, int numArgs)
+    {
+        if (rewardRegistry.containsKey(rewardClass))
+            return false;
+        rewardRegistry.put(rewardClass, key + "[" + numArgs + "]");
+        return true;
+    }
+
+    public static void instantiateAllObjectivesForQuest(UUID playerUUID, String questUID)
+    {
+        if (PlayerData.getObjectives(playerUUID, questUID) == null)
+            return;
         ArrayList<String> objectives = new ArrayList<String>(Arrays.asList(PlayerData.getObjectives(playerUUID, questUID)));
-        if (objectives.size() == 0 || (objectives.size() == 1 && objectives.get(0).equals("")))
-            objectives = QuestData.getQuestObjectives(questUID);
         if (!runningObjectives.keySet().contains(playerUUID))
             runningObjectives.put(playerUUID, new ArrayList<AbstractObjective>());
         for (String obj : objectives)
         {
-            AbstractObjective ao = startObjective(obj);
+            AbstractObjective ao = initObjectiveFromString(obj);
             if (ao != null)
             {
                 ao.parentQuest = questUID;
-                runningObjectives.get(playerUUID).add(ao);
+                ao.parentUUID = playerUUID;
+                if (!runningObjectives.get(playerUUID).contains(ao))
+                {
+                    runningObjectives.get(playerUUID).add(ao);
+                    ao.start();
+                }
             }
         }
     }
 
-    protected static AbstractObjective startObjective(String obj)
+    protected static AbstractObjective initObjectiveFromString(String obj)
     {
         Pattern parser = Pattern.compile("(.+)\\((.*)\\)");
         Matcher result = parser.matcher(obj);
-        if (result.groupCount() == 2)
+        if (result.matches() && result.groupCount() == 2)
         {
-            String objectiveType = result.group(0).trim();
-            String[] objectiveArgs = result.group(1).split("[,\\s]+");;
+            String objectiveType = result.group(1).trim();
+            String[] objectiveArgs = result.group(2).split("[,\\s]+");;
             if (objectiveArgs.length == getNumObjectiveArgs(objectiveType))
             {
-                for (Map.Entry<AbstractObjective, String> e : objectiveRegistry.entrySet())
+                for (Map.Entry<Class, String> e : objectiveRegistry.entrySet())
                 {
-                    if (e.getValue().equals(objectiveType))
+                    if (e.getValue().replaceAll("\\[[0-9]*\\]", "").equals(objectiveType))
                     {
-                        return e.getKey().start(objectiveArgs);
+                        try
+                        {
+                            return ((AbstractObjective)e.getKey().newInstance()).init(objectiveArgs);
+                        }
+                        catch (Exception x)
+                        {
+                            x.printStackTrace();
+                        }
                     }
                 }
             }
@@ -54,7 +82,21 @@ public class QuestManager
         return null;
     }
 
-    protected static void removeObjectives(UUID player, String questUID)
+    public static ArrayList<AbstractObjective> getRunningObjectivesForPlayer(UUID playerUUID, String questUID)
+    {
+        ArrayList<AbstractObjective> running = new ArrayList<AbstractObjective>();
+        if (runningObjectives.keySet().contains(playerUUID))
+        {
+            for (AbstractObjective ao : runningObjectives.get(playerUUID))
+            {
+                if (ao.parentQuest.equals(questUID))
+                    running.add(ao);
+            }
+        }
+        return running;
+    }
+
+    protected static void removeObjectivesForPlayer(UUID player, String questUID)
     {
         if (!runningObjectives.keySet().contains(player))
             return;
@@ -91,8 +133,8 @@ public class QuestManager
         if (isCompleted(player, questUID))
         {
             giveRewards(player, questUID);
-            PlayerData.updateQuestCompletion(player, questUID, true);
-            removeObjectives(player, questUID);
+            PlayerData.setQuestCompletion(player, questUID, true);
+            removeObjectivesForPlayer(player, questUID);
         }
     }
 
@@ -109,16 +151,23 @@ public class QuestManager
         Matcher result = parser.matcher(reward);
         if (result.groupCount() == 2)
         {
-            String rewardType = result.group(0).trim();
-            String[] rewardArgs = result.group(1).split("[,\\s]+");;
+            String rewardType = result.group(1).trim();
+            String[] rewardArgs = result.group(2).split("[,\\s]+");;
             if (rewardArgs.length == getNumRewardArgs(rewardType))
             {
-                for (Map.Entry<AbstractReward, String> e : rewardRegistry.entrySet())
+                for (Map.Entry<Class, String> e : rewardRegistry.entrySet())
                 {
                     if (e.getValue().equals(rewardType))
                     {
-                        e.getKey().give(player, rewardArgs);
-                        return;
+                        try
+                        {
+                            ((AbstractReward)e.getKey().newInstance()).give(player, rewardArgs);
+                            return;
+                        }
+                        catch (Exception x)
+                        {
+                            x.printStackTrace();
+                        }
                     }
                 }
             }
@@ -131,8 +180,8 @@ public class QuestManager
         for (String key : objectiveRegistry.values())
         {
             Matcher result = parser.matcher(key);
-            if (result.group(0).trim().equals(objective))
-                return Integer.parseInt(result.group(1).trim());
+            if (result.matches() && result.group(1).trim().equals(objective))
+                return Integer.parseInt(result.group(2).trim());
         }
         return 0;
     }
@@ -143,8 +192,8 @@ public class QuestManager
         for (String key : rewardRegistry.values())
         {
             Matcher result = parser.matcher(key);
-            if (result.group(0).trim().equals(reward))
-                return Integer.parseInt(result.group(1).trim());
+            if (result.matches() && result.group(1).trim().equals(reward))
+                return Integer.parseInt(result.group(2).trim());
         }
         return 0;
     }

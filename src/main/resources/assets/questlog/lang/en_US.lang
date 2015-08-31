@@ -50,6 +50,9 @@ command.questlog.hascollectible=Player has that collectible.
 command.questlog.nothascollectible=Player does not have that collectible.
 command.questlog.addcollectible=Added collectible.
 command.questlog.removecollectible=Removed collectible.
+command.questlog.addquest=Added quest.
+command.questlog.removequest=Removed quest.
+command.questlog.kill=Kill
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
@@ -57,12 +60,14 @@ command.questlog.term.page=Uniquely identified set of nodes. Contains any number
 command.questlog.term.questNode=Node linked to a quest and its completion status.
 command.questlog.term.pageNode=Node which changes displayed page to its target.
 command.questlog.term.lineNode=Node which defines a line from one point to another on a page.
-command.questlog.term.entryType=quest, page, questNode, pageNode, or lineNode.
+command.questlog.term.tag=Flag which indicates a unique behavior.
+command.questlog.term.tags=Quest Tags: autocomplete
 
 command.questlog.objectives.syntax=objectiveA(arg1,arg2,arg3);objectiveB(arg1);objectiveC() OR null
 command.questlog.rewards.syntax=rewardA(arg1,arg2);rewardB(arg1,arg2,arg3) OR null
 command.questlog.tags.syntax=tagA;tagB;tagC OR null
 command.questlog.parents.syntax=nodeUID_1;nodeUID_2 OR null
+command.questlog.entrytype.syntax=quest, page, questNode, pageNode, or lineNode.
 
 command.questlog.version=Gives you the version of this mod.
 command.questlog.version.syntax=/questlog §eversion§r

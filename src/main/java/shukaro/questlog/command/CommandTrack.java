@@ -1,6 +1,7 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
+import cofh.lib.util.helpers.SecurityHelper;
 import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.command.CommandBase;
@@ -35,15 +36,7 @@ public class CommandTrack implements ISubCommand
     {
         if (args.length == 1)
         {
-            UUID playerUUID = null;
-            for (EntityPlayer player : (List<EntityPlayer>)sender.getEntityWorld().playerEntities)
-            {
-                if (player.getCommandSenderName().equals(sender.getCommandSenderName()))
-                {
-                    playerUUID = player.getPersistentID();
-                    break;
-                }
-            }
+            UUID playerUUID = SecurityHelper.getID(MinecraftServer.getServer().getConfigurationManager().func_152612_a(sender.getCommandSenderName()));
             if (playerUUID == null)
                 throw new WrongUsageException("command.questlog.onlyplayers");
             StringBuilder out = new StringBuilder(StringHelper.localize("command.questlog.tracking") + " ");
@@ -57,15 +50,7 @@ public class CommandTrack implements ISubCommand
         }
         else if (args.length == 2)
         {
-            UUID playerUUID = null;
-            for (EntityPlayer player : (List<EntityPlayer>)sender.getEntityWorld().playerEntities)
-            {
-                if (player.getCommandSenderName().equals(sender.getCommandSenderName()))
-                {
-                    playerUUID = player.getPersistentID();
-                    break;
-                }
-            }
+            UUID playerUUID = SecurityHelper.getID(MinecraftServer.getServer().getConfigurationManager().func_152612_a(sender.getCommandSenderName()));
             if (playerUUID == null)
                 throw new WrongUsageException("command.questlog.onlyplayers");
 
@@ -84,37 +69,18 @@ public class CommandTrack implements ISubCommand
         }
         else if (args.length == 3)
         {
-            EntityPlayer senderEntity = null;
-            for (EntityPlayer p : (List<EntityPlayer>)sender.getEntityWorld().playerEntities)
-            {
-                if (p.getCommandSenderName().equals(sender.getCommandSenderName()))
-                {
-                    senderEntity = p;
-                    break;
-                }
-            }
+            EntityPlayer senderEntity = MinecraftServer.getServer().getConfigurationManager().func_152612_a(sender.getCommandSenderName());
             if (senderEntity != null && !MinecraftServer.getServer().getConfigurationManager().func_152596_g(senderEntity.getGameProfile()))
                 throw new WrongUsageException("command.questlog.disallowed");
             String questUID = args[1];
             String playerName = args[2];
-            EntityPlayer player = null;
-            for (World world : MinecraftServer.getServer().worldServers)
-            {
-                for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                {
-                    if (p.getDisplayName().equals(playerName))
-                    {
-                        player = p;
-                        break;
-                    }
-                }
-            }
+            EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
             if (player == null)
             {
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                 return;
             }
-            UUID targetUUID = player.getPersistentID();
+            UUID targetUUID = SecurityHelper.getID(player);
             if (QuestData.getQuest(questUID) == null)
             {
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchuid")));

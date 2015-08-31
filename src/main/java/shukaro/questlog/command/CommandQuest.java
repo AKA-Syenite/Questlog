@@ -1,6 +1,7 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
+import cofh.lib.util.helpers.SecurityHelper;
 import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.command.CommandBase;
@@ -50,18 +51,7 @@ public class CommandQuest implements ISubCommand
                 sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                 return;
             }
-            UUID playerUUID = null;
-            for (World world : MinecraftServer.getServer().worldServers)
-            {
-                for (EntityPlayer player : (List<EntityPlayer>)world.playerEntities)
-                {
-                    if (player.getDisplayName().equals(playerName))
-                    {
-                        playerUUID = player.getPersistentID();
-                        break;
-                    }
-                }
-            }
+            UUID playerUUID = SecurityHelper.getID(MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName));
             if (playerUUID != null)
             {
                 if (op.equals("add"))
@@ -71,6 +61,7 @@ public class CommandQuest implements ISubCommand
                     {
                         //sync
                     }
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.addquest")));
                 }
                 else if (op.equals("remove"))
                 {
@@ -79,6 +70,7 @@ public class CommandQuest implements ISubCommand
                     {
                         //sync
                     }
+                    sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.removequest")));
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + ".syntax");

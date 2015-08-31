@@ -27,6 +27,7 @@ public class CommandHelp implements ISubCommand
         terms.put("pageNode", "command.questlog.term.pageNode");
         terms.put("lineNode", "command.questlog.term.lineNode");
         terms.put("entryType", "command.questlog.term.entryType");
+        terms.put("tag", "command.questlog.term.tag");
     }
 
     @Override

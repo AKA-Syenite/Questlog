@@ -43,10 +43,10 @@
                   "type": "string"
                 },
                 "complete": {
-                  "type": "string"
+                  "type": "boolean"
                 },
                 "tracked": {
-                  "type": "string"
+                  "type": "boolean"
                 },
                 "objectives": {
                   "type": "array",

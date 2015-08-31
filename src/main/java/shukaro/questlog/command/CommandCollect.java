@@ -1,6 +1,8 @@
 package shukaro.questlog.command;
 
 import cofh.core.command.ISubCommand;
+import cofh.lib.util.helpers.SecurityHelper;
+import cofh.lib.util.helpers.ServerHelper;
 import cofh.lib.util.helpers.StringHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -38,24 +40,13 @@ public class CommandCollect implements ISubCommand
                 if (args.length == 3)
                 {
                     String playerName = args[2];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                         return;
                     }
-                    UUID targetUUID = player.getPersistentID();
+                    UUID targetUUID = SecurityHelper.getID(player);
                     int i = 0;
                     StringBuilder out = new StringBuilder();
                     for (String s : PlayerData.getCollectibles(targetUUID))
@@ -81,24 +72,13 @@ public class CommandCollect implements ISubCommand
                 {
                     String collectible = args[2];
                     String playerName = args[3];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                         return;
                     }
-                    UUID targetUUID = player.getPersistentID();
+                    UUID targetUUID = SecurityHelper.getID(player);
                     sender.addChatMessage(new ChatComponentText(PlayerData.getCollectibles(targetUUID).contains(collectible) ? StringHelper.localize("command.questlog.hascollectible") : StringHelper.localize("command.questlog.nothascollectible")));
                 }
                 else
@@ -110,26 +90,19 @@ public class CommandCollect implements ISubCommand
                 {
                     String collectible = args[2];
                     String playerName = args[3];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                         return;
                     }
-                    UUID targetUUID = player.getPersistentID();
+                    UUID targetUUID = SecurityHelper.getID(player);
                     PlayerData.addCollectible(targetUUID, collectible);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.addcollectible")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");
@@ -140,26 +113,19 @@ public class CommandCollect implements ISubCommand
                 {
                     String collectible = args[2];
                     String playerName = args[3];
-                    EntityPlayer player = null;
-                    for (World world : MinecraftServer.getServer().worldServers)
-                    {
-                        for (EntityPlayer p : (List<EntityPlayer>)world.playerEntities)
-                        {
-                            if (p.getDisplayName().equals(playerName))
-                            {
-                                player = p;
-                                break;
-                            }
-                        }
-                    }
+                    EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName);
                     if (player == null)
                     {
                         sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.nosuchplayer")));
                         return;
                     }
-                    UUID targetUUID = player.getPersistentID();
+                    UUID targetUUID = SecurityHelper.getID(player);
                     PlayerData.removeCollectible(targetUUID, collectible);
                     sender.addChatMessage(new ChatComponentText(StringHelper.localize("command.questlog.removecollectible")));
+                    if (ServerHelper.isMultiPlayerServer())
+                    {
+                        //sync
+                    }
                 }
                 else
                     throw new WrongUsageException("command.questlog." + getCommandName() + "." + args[1] + ".syntax");

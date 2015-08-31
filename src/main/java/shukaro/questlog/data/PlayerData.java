@@ -18,7 +18,6 @@ import shukaro.questlog.data.questing.QuestManager;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 
 public class PlayerData
@@ -78,10 +77,10 @@ public class PlayerData
     {
         BufferedWriter out = new BufferedWriter(new FileWriter(dataFile));
         JsonObject jo = new JsonObject();
-        for (Map.Entry<UUID, ArrayList<AbstractObjective>> entry : QuestManager.runningObjectives.entrySet())
+        for (UUID playerUUID : QuestManager.runningObjectives.keySet())
         {
-            for (AbstractObjective obj : entry.getValue())
-                updateObjectives(entry.getKey(), obj.parentQuest, obj.saveToStringArray());
+            for (String questUID : getQuestIDs(playerUUID))
+                updateObjectives(playerUUID, questUID);
         }
         jo.add("players", data);
         out.write(jo.toString());
@@ -96,7 +95,7 @@ public class PlayerData
             JsonObject player = (JsonObject)playerIT.next();
             UUID playerUUID = UUID.fromString(player.get("uuid").getAsString());
             for (String questUID : getQuestIDs(playerUUID))
-                QuestManager.instantiateObjectives(playerUUID, questUID);
+                QuestManager.instantiateAllObjectivesForQuest(playerUUID, questUID);
         }
     }
 
@@ -121,6 +120,14 @@ public class PlayerData
             newPlayer.add("quests", new JsonArray());
             data.add(newPlayer);
             player = newPlayer;
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
         return player;
     }
@@ -138,26 +145,42 @@ public class PlayerData
         }
         JsonObject newQuest = new JsonObject();
         newQuest.add("uid", new JsonPrimitive(questUID));
-        newQuest.add("complete", new JsonPrimitive("false"));
-        newQuest.add("tracked", new JsonPrimitive("false"));
-        newQuest.add("objectives", new JsonArray());
+        newQuest.add("complete", new JsonPrimitive(false));
+        newQuest.add("tracked", new JsonPrimitive(false));
+        newQuest.add("objectives", Questlog.parser.parse(Questlog.gson.toJson(QuestData.getQuestObjectives(questUID))).getAsJsonArray());
         player.getAsJsonArray("quests").add(newQuest);
-        QuestManager.instantiateObjectives(uuid, questUID);
+        QuestManager.instantiateAllObjectivesForQuest(uuid, questUID);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void removeQuest(UUID uuid, String questUID)
     {
         JsonObject player = getPlayerData(uuid);
         JsonObject quest = null;
+        JsonArray newArray = new JsonArray();
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
         while (questIT.hasNext())
         {
             quest = (JsonObject)questIT.next();
-            if (quest.get("uid").getAsString().equals(uuid.toString()))
-            {
-                questIT.remove();
-                return;
-            }
+            if (!quest.get("uid").getAsString().equals(questUID))
+                newArray.add(quest);
+        }
+        player.remove("quests");
+        player.add("quests", newArray);
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -195,7 +218,7 @@ public class PlayerData
         return out;
     }
 
-    public static void updateObjectives(UUID playerUUID, String questUID, String[] objectives)
+    public static void setObjectives(UUID playerUUID, String questUID, String[] objectives)
     {
         JsonObject player = getPlayerData(playerUUID);
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
@@ -210,6 +233,26 @@ public class PlayerData
                 for (String s : objectives)
                     newArgs.add(new JsonPrimitive(s));
                 quest.add("objectives", newArgs);
+                return;
+            }
+        }
+    }
+
+    public static void updateObjectives(UUID playerUUID, String questUID)
+    {
+        JsonObject player = getPlayerData(playerUUID);
+        Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
+        JsonObject quest = null;
+        while (questIT.hasNext())
+        {
+            quest = questIT.next().getAsJsonObject();
+            if (quest.get("uid").getAsString().equals(questUID))
+            {
+                ArrayList<String> objectives = new ArrayList<String>();
+                for (AbstractObjective ao : QuestManager.getRunningObjectivesForPlayer(playerUUID, questUID))
+                    objectives.add(ao.saveToString());
+                setObjectives(playerUUID, questUID, objectives.toArray(new String[objectives.size()]));
+                return;
             }
         }
     }
@@ -223,7 +266,7 @@ public class PlayerData
         {
             quest = questIT.next().getAsJsonObject();
             if (quest.get("uid").getAsString().equals(questUID))
-                return quest.get("tracked").getAsString().equals("true");
+                return quest.get("tracked").getAsBoolean();
         }
         return false;
     }
@@ -253,6 +296,15 @@ public class PlayerData
                 {
                     quest.remove("tracked");
                     quest.add("tracked", new JsonPrimitive(tracked));
+                    try
+                    {
+                        save();
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                    return;
                 }
             }
         }
@@ -267,12 +319,12 @@ public class PlayerData
         {
             quest = questIT.next().getAsJsonObject();
             if (quest.get("uid").getAsString().equals(questUID))
-                return quest.get("complete").getAsString().equals("true");
+                return quest.get("complete").getAsBoolean();
         }
         return false;
     }
 
-    public static void updateQuestCompletion(UUID playerUUID, String questUID, boolean complete)
+    public static void setQuestCompletion(UUID playerUUID, String questUID, boolean complete)
     {
         JsonObject player = getPlayerData(playerUUID);
         Iterator<JsonElement> questIT = player.getAsJsonArray("quests").iterator();
@@ -283,7 +335,16 @@ public class PlayerData
             if (quest.get("uid").getAsString().equals(questUID))
             {
                 quest.remove("complete");
-                quest.add("complete", new JsonPrimitive(complete ? "true" : "false"));
+                quest.add("complete", new JsonPrimitive(complete));
+                try
+                {
+                    save();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+                return;
             }
         }
     }
@@ -325,29 +386,25 @@ public class PlayerData
     {
         JsonObject player = getPlayerData(playerUUID);
         JsonElement e;
+        JsonArray newArray = new JsonArray();
+        int newVal = amount;
         Iterator<JsonElement> scoreIT = player.getAsJsonArray("scores").iterator();
         while (scoreIT.hasNext())
         {
             e = scoreIT.next();
             if (e.getAsString().split(":").length != 2 || !e.getAsString().split(":")[1].matches("[0-9]*"))
                 continue;
-            if (e.getAsString().split(":")[0].equals(score))
+            if (!e.getAsString().split(":")[0].equals(score))
+                newArray.add(e);
+            else
             {
-                int newVal = Integer.parseInt(e.getAsString().split(":")[1]) + amount;
-                scoreIT.remove();
-                player.getAsJsonArray("scores").add(new JsonPrimitive(score + ":" + newVal));
-                try
-                {
-                    save();
-                }
-                catch (IOException x)
-                {
-                    x.printStackTrace();
-                }
-                return newVal;
+                newVal += Integer.parseInt(e.getAsString().split(":")[1]);
+                break;
             }
         }
-        player.getAsJsonArray("scores").add(new JsonPrimitive(score + ":" + amount));
+        player.remove("scores");
+        newArray.add(new JsonPrimitive(score + ":" + newVal));
+        player.add("scores", newArray);
         try
         {
             save();
@@ -363,19 +420,28 @@ public class PlayerData
     {
         JsonObject player = getPlayerData(playerUUID);
         JsonElement e;
+        JsonArray newArray = new JsonArray();
+        JsonArray oldArray = player.getAsJsonArray("scores");
         Iterator<JsonElement> scoreIT = player.getAsJsonArray("scores").iterator();
         while (scoreIT.hasNext())
         {
             e = scoreIT.next();
             if (e.getAsString().split(":").length != 2 || !e.getAsString().split(":")[1].matches("[0-9]*"))
                 continue;
-            if (e.getAsString().split(":")[0].equals(score))
-            {
-                scoreIT.remove();
-                return true;
-            }
+            if (!e.getAsString().split(":")[0].equals(score))
+                newArray.add(e);
         }
-        return false;
+        player.remove("scores");
+        player.add("scores", newArray);
+        try
+        {
+            save();
+        }
+        catch (IOException x)
+        {
+            x.printStackTrace();
+        }
+        return newArray.size() < oldArray.size();
     }
 
     public static ArrayList<String> getCollectibles(UUID playerUUID)
@@ -418,12 +484,17 @@ public class PlayerData
             return false;
         else
         {
+            JsonArray newArray = new JsonArray();
+            JsonElement e;
             Iterator<JsonElement> colIT = player.getAsJsonArray("collectibles").iterator();
             while (colIT.hasNext())
             {
-                if (colIT.next().getAsString().equals(collectible))
-                    colIT.remove();
+                e = colIT.next();
+                if (!e.getAsString().equals(collectible))
+                    newArray.add(e);
             }
+            player.remove("collectibles");
+            player.add("collectibles", newArray);
             try
             {
                 save();
@@ -520,6 +591,14 @@ public class PlayerData
         }
         JsonObject player = getPlayerData(playerUUID);
         player.getAsJsonArray("leading").add(new JsonPrimitive(groupUID));
+        try
+        {
+            save();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void addPlayerToGroup(UUID playerUUID, String groupUID)
@@ -528,6 +607,14 @@ public class PlayerData
         {
             JsonObject player = getPlayerData(playerUUID);
             player.getAsJsonArray("groups").add(new JsonPrimitive(groupUID));
+            try
+            {
+                save();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -552,6 +639,14 @@ public class PlayerData
                 }
                 player.remove("leading");
                 player.add("leading", Questlog.parser.parse(Questlog.gson.toJson(newLeading)).getAsJsonArray());
+                try
+                {
+                    save();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
             else
             {
@@ -570,6 +665,14 @@ public class PlayerData
                 }
                 player.remove("groups");
                 player.add("groups", Questlog.parser.parse(Questlog.gson.toJson(newGroups)).getAsJsonArray());
+                try
+                {
+                    save();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }

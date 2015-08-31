@@ -9,6 +9,8 @@ import shukaro.questlog.data.BookData;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 import shukaro.questlog.Questlog;
+import shukaro.questlog.data.questing.QuestManager;
+import shukaro.questlog.data.questing.objectives.ObjectiveKillEntity;
 import shukaro.questlog.event.QuestEventHandler;
 
 import java.io.File;
@@ -33,6 +35,8 @@ public class CommonProxy
         QuestData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "questData.json"));
         BookData.init(new File(evt.getModConfigurationDirectory(), Questlog.modID + File.separator + "bookData.json"));
         MinecraftForge.EVENT_BUS.register(new QuestEventHandler());
+        registerObjectives();
+        registerRewards();
     }
 
     public void init(FMLInitializationEvent evt)
@@ -41,6 +45,16 @@ public class CommonProxy
     }
 
     public void postInit(FMLPostInitializationEvent evt)
+    {
+
+    }
+
+    private void registerObjectives()
+    {
+        QuestManager.registerObjective(ObjectiveKillEntity.class, "killEntity", 3);
+    }
+
+    private void registerRewards()
     {
 
     }

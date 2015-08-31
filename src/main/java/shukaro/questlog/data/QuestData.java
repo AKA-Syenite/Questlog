@@ -210,6 +210,11 @@ public class QuestData
         return out;
     }
 
+    public static boolean hasTag(String questUID, String tag)
+    {
+        return getQuestTags(questUID).contains(tag);
+    }
+
     protected static void setQuestTags(JsonObject quest, JsonArray tags)
     {
         quest.remove("tags");
