@@ -53,6 +53,8 @@ command.questlog.removecollectible=Removed collectible.
 command.questlog.addquest=Added quest.
 command.questlog.removequest=Removed quest.
 command.questlog.kill=Kill
+command.questlog.null=null
+command.questlog.oreentries=OreDic Entries:
 
 command.questlog.term.uid=Unique ID.
 command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)

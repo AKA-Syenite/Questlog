@@ -10,6 +10,7 @@ import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 import shukaro.questlog.Questlog;
 import shukaro.questlog.data.questing.QuestManager;
+import shukaro.questlog.data.questing.objectives.ObjectiveHaveItem;
 import shukaro.questlog.data.questing.objectives.ObjectiveKillEntity;
 import shukaro.questlog.event.QuestEventHandler;
 
