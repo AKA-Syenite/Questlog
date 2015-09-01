@@ -24,6 +24,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import shukaro.questlog.QuestUtil;
+import shukaro.questlog.Questlog;
 
 import java.util.List;
 
@@ -56,9 +57,7 @@ public class CommandInfo implements ISubCommand
                         held = player.getHeldItem();
                     if (held != null)
                     {
-                        String stack = Item.itemRegistry.getNameForObject(held.getItem()) +
-                                "@" + (held.getItemDamage() == OreDictionary.WILDCARD_VALUE ? "*" : held.getItemDamage()) +
-                                "#" + (held.hasTagCompound() ? held.getTagCompound().toString() : "null");
+                        String stack = QuestUtil.stackToString(held);
                         sender.addChatMessage(new ChatComponentText(stack));
                         if (OreDictionary.getOreIDs(held).length > 0)
                         {
@@ -90,7 +89,7 @@ public class CommandInfo implements ISubCommand
                                 NBTTagCompound nbt = new NBTTagCompound();
                                 if (!underMouse.entityHit.writeToNBTOptional(nbt))
                                     underMouse.entityHit.writeMountToNBT(nbt);
-                                String entity = underMouse.entityHit.getClass().getName() + "#" + (nbt.hasNoTags() ? "null" : nbt.toString());
+                                String entity = underMouse.entityHit.getClass().getName() + "#" + (nbt.hasNoTags() ? "null" : Questlog.gson.toJson(nbt));
                                 sender.addChatMessage(new ChatComponentText(entity));
                                 return;
                             }
@@ -104,7 +103,7 @@ public class CommandInfo implements ISubCommand
                                     te.writeToNBT(nbt);
                                 String block = Block.blockRegistry.getNameForObject(world.getBlock(blockHit.x, blockHit.y, blockHit.z)) +
                                         "@" + (world.getBlockMetadata(blockHit.x, blockHit.y, blockHit.z) == OreDictionary.WILDCARD_VALUE ? "*" : world.getBlockMetadata(blockHit.x, blockHit.y, blockHit.z)) +
-                                        "#" + (nbt.hasNoTags() ? "null" : nbt.toString());
+                                        "#" + (nbt.hasNoTags() ? "null" : Questlog.gson.toJson(nbt));
                                 sender.addChatMessage(new ChatComponentText(block));
                                 return;
                             }

@@ -53,6 +53,7 @@ public class CommonProxy
     private void registerObjectives()
     {
         QuestManager.registerObjective(ObjectiveKillEntity.class, "killEntity", 3);
+        QuestManager.registerObjective(ObjectiveHaveItem.class, "haveItem", 2);
     }
 
     private void registerRewards()

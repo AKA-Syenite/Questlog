@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import scala.collection.parallel.ParIterableLike;
 import shukaro.questlog.data.PlayerData;
 import shukaro.questlog.data.QuestData;
 import shukaro.questlog.data.questing.AbstractObjective;
@@ -49,6 +50,12 @@ public class ObjectiveKillEntity extends AbstractObjective
     }
 
     @Override
+    public void stop()
+    {
+        MinecraftForge.EVENT_BUS.unregister(this);
+    }
+
+    @Override
     public String saveToString()
     {
         return "killEntity(" + entityClass.getName() + "," + killed + "," + toKill + ")";
@@ -57,7 +64,7 @@ public class ObjectiveKillEntity extends AbstractObjective
     @Override
     public String getLocalizedText()
     {
-        return StringHelper.localize("command.questlog.kill") + " " + StringHelper.localize((String)EntityList.classToStringMapping.get(entityClass)) + "s " + killed + "/" + toKill;
+        return StringHelper.localize("objective.questlog.kill") + " " + StringHelper.localize((String)EntityList.classToStringMapping.get(entityClass)) + "s " + killed + "/" + toKill;
     }
 
     @SubscribeEvent

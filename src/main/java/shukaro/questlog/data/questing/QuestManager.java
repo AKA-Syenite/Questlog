@@ -103,7 +103,9 @@ public class QuestManager
         for (AbstractObjective ao : runningObjectives.get(player))
         {
             if (ao.parentQuest.equals(questUID))
+            {
                 runningObjectives.get(player).remove(ao);
+            }
         }
     }
 

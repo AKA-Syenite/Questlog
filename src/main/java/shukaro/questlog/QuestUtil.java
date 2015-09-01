@@ -1,15 +1,23 @@
 package shukaro.questlog;
 
+import cofh.lib.util.helpers.SecurityHelper;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class QuestUtil
 {
@@ -60,5 +68,63 @@ public class QuestUtil
         }
 
         return null;
+    }
+
+    public static EntityPlayer getPlayerByUUID(UUID uuid)
+    {
+        for (World world : MinecraftServer.getServer().worldServers)
+        {
+            for (EntityPlayer player : (List<EntityPlayer>)world.playerEntities)
+            {
+                if (SecurityHelper.getID(player).equals(uuid))
+                    return player;
+            }
+        }
+        return null;
+    }
+
+    public static String stackToString(ItemStack stack)
+    {
+        String out = Item.itemRegistry.getNameForObject(stack.getItem()) +
+                "@" + (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE ? "*" : stack.getItemDamage()) +
+                "#" + (stack.hasTagCompound() ? stack.getTagCompound().toString() : "null");
+        return out;
+    }
+
+    public static ItemStack stackFromString(String stackString)
+    {
+        String name = stackString.substring(0, stackString.indexOf('@'));
+        String meta = stackString.substring(stackString.indexOf('@') + 1, stackString.indexOf('#'));
+        String nbt = stackString.substring(stackString.indexOf('#') + 1, stackString.length());
+
+        int intMeta = 0;
+        if (meta.equals("*"))
+            intMeta = OreDictionary.WILDCARD_VALUE;
+        else
+        {
+            try
+            {
+                intMeta = Integer.parseInt(meta);
+            }
+            catch (NumberFormatException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        NBTTagCompound tag = Questlog.gson.fromJson(nbt, NBTTagCompound.class);
+
+        ItemStack stack = null;
+        if (Item.itemRegistry.containsKey(name))
+        {
+            stack = new ItemStack((Item)Item.itemRegistry.getObject(name), 1, intMeta);
+            stack.stackTagCompound = tag;
+        }
+        else if (Block.blockRegistry.containsKey(name))
+        {
+            stack = new ItemStack((Block)Block.blockRegistry.getObject(name), 1, intMeta);
+            stack.stackTagCompound = tag;
+        }
+        return stack;
     }
 }

@@ -52,7 +52,6 @@ command.questlog.addcollectible=Added collectible.
 command.questlog.removecollectible=Removed collectible.
 command.questlog.addquest=Added quest.
 command.questlog.removequest=Removed quest.
-command.questlog.kill=Kill
 command.questlog.null=null
 command.questlog.oreentries=OreDic Entries:
 
@@ -145,3 +144,6 @@ command.questlog.collect.list.syntax=/questlog §ecollect list§r §lplayer§r
 command.questlog.collect.has.syntax=/questlog §ecollect has§r §lcollectible player§r
 command.questlog.collect.add.syntax=/questlog §ecollect add§r §lcollectible player§r
 command.questlog.collect.remove.syntax=/questlog §ecollect remove§r §lcollectible player§r
+
+objective.questlog.kill=Kill
+objective.questlog.collect=Collect
