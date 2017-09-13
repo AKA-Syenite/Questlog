@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uid": {
+            "type": "string"
+          },
+          "questNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string"
+                },
+                "questUID": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "integer"
+                },
+                "y": {
+                  "type": "integer"
+                },
+                "parents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "uid",
+                "questUID",
+                "x",
+                "y",
+                "parents",
+                "tags"
+              ]
+            }
+          },
+          "lineNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "integer"
+                },
+                "y": {
+                  "type": "integer"
+                },
+                "x2": {
+                  "type": "integer"
+                },
+                "y2": {
+                  "type": "integer"
+                },
+                "parents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "uid",
+                "x",
+                "y",
+                "parents",
+                "tags",
+                "x2",
+                "y2"
+              ]
+            }
+          },
+          "pageNodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string"
+                },
+                "x": {
+                  "type": "integer"
+                },
+                "y": {
+                  "type": "integer"
+                },
+                "target": {
+                  "type": "string"
+                },
+                "parents": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "uid",
+                "x",
+                "y",
+                "parents",
+                "tags",
+                "target"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "uid",
+          "questNodes",
+          "lineNodes",
+          "pageNodes"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "pages"
+  ]
+}

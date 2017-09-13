@@ -1,0 +1,16 @@
+[
+{
+  "modid": "questlog",
+  "name": "Questlog",
+  "description": "Questing Framework",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Shukaro"],
+  "credits": "All the contributors",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

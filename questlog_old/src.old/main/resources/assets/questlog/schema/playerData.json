@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "players": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "leading": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "scores": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "collectibles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "quests": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "uid": {
+                  "type": "string"
+                },
+                "complete": {
+                  "type": "boolean"
+                },
+                "tracked": {
+                  "type": "boolean"
+                },
+                "objectives": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "uid",
+                "complete",
+                "tracked",
+                "objectives"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "uuid",
+          "groups",
+          "leading",
+          "scores",
+          "collectibles",
+          "quests"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "players"
+  ]
+}

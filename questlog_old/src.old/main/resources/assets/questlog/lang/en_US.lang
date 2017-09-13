@@ -1,0 +1,149 @@
+#Commands
+command.questlog.notFound=No such command, try /questlog help for a listing of commands.
+command.questlog.available=Available commands are:
+command.questlog.disallowed=You are not allowed to use this command.
+command.questlog.and=and
+command.questlog.uidtaken=That UID is already in use.
+command.questlog.nosuchuid=There is no entry with that UID.
+command.questlog.nosuchpage=There is no page with that UID.
+command.questlog.nosuchquest=There is no quest with that UID.
+command.questlog.questcreated=Defined new quest.
+command.questlog.pagecreated=Defined new page.
+command.questlog.questnodecreated=Defined new quest node.
+command.questlog.pagenodecreated=Defined new page node.
+command.questlog.linenodecreated=Defined new line node.
+command.questlog.questnodedeleted=Deleted quest node.
+command.questlog.pagenodedeleted=Deleted page node.
+command.questlog.linenodedeleted=Deleted line node.
+command.questlog.questdeleted=Deleted quest.
+command.questlog.pagedeleted=Deleted page.
+command.questlog.coordnotint=Coordinates must be integers.
+command.questlog.notanumber=Amount must be an integer.
+command.questlog.first=[1st]
+command.questlog.second=[2nd]
+command.questlog.total=Total:
+command.questlog.updatedquest=Updated quest.
+command.questlog.updatedpage=Updated page.
+command.questlog.updatednode=Updated node.
+command.questlog.onlyplayers=Only players may use this command without a name argument.
+command.questlog.tracking=Tracked Quests:
+command.questlog.canttrack=Cannot track that quest.
+command.questlog.nosuchplayer=No such player.
+command.questlog.uid=UID:
+command.questlog.objectives=Objectives:
+command.questlog.rewards=Rewards:
+command.questlog.tags=Tags:
+command.questlog.questnodes=Quest Nodes:
+command.questlog.pagenodes=Page Nodes:
+command.questlog.linenodes=Line Nodes:
+command.questlog.questuid=Quest UID:
+command.questlog.x=X Coordinate:
+command.questlog.y=Y Coordinate:
+command.questlog.x2=Secondary X Coordinate:
+command.questlog.y2=Secondary Y Coordinate:
+command.questlog.target=Target Page:
+command.questlog.scoremod=Score Modified.
+command.questlog.scoredelete=Deleted Score.
+command.questlog.noscores=Player has no scores.
+command.questlog.nocollectibles=Player has no collectibles.
+command.questlog.hascollectible=Player has that collectible.
+command.questlog.nothascollectible=Player does not have that collectible.
+command.questlog.addcollectible=Added collectible.
+command.questlog.removecollectible=Removed collectible.
+command.questlog.addquest=Added quest.
+command.questlog.removequest=Removed quest.
+command.questlog.null=null
+command.questlog.oreentries=OreDic Entries:
+
+command.questlog.term.uid=Unique ID.
+command.questlog.term.quest=Uniquely identified task with any number of objectives (what to do), any number of rewards (what you get), and any number of tags (flags for special behavior)
+command.questlog.term.page=Uniquely identified set of nodes. Contains any number of quest, page, or line nodes.
+command.questlog.term.questNode=Node linked to a quest and its completion status.
+command.questlog.term.pageNode=Node which changes displayed page to its target.
+command.questlog.term.lineNode=Node which defines a line from one point to another on a page.
+command.questlog.term.tag=Flag which indicates a unique behavior.
+command.questlog.term.tags=Quest Tags: autocomplete
+
+command.questlog.objectives.syntax=objectiveA(arg1,arg2,arg3);objectiveB(arg1);objectiveC() OR null
+command.questlog.rewards.syntax=rewardA(arg1,arg2);rewardB(arg1,arg2,arg3) OR null
+command.questlog.tags.syntax=tagA;tagB;tagC OR null
+command.questlog.parents.syntax=nodeUID_1;nodeUID_2 OR null
+command.questlog.entrytype.syntax=quest, page, questNode, pageNode, or lineNode.
+
+command.questlog.version=Gives you the version of this mod.
+command.questlog.version.syntax=/questlog §eversion§r
+
+command.questlog.help=Displays help information.
+command.questlog.help.syntax=/questlog §ehelp§r §l[command]§r
+
+command.questlog.syntax=Displays syntax information.
+command.questlog.syntax.syntax=/questlog §esyntax§r §l[command] [entryType]§r
+
+command.questlog.new=Creates new entries.
+command.questlog.new.syntax=/questlog §enew§r §lentryType args§r
+
+command.questlog.new.quest.syntax=/questlog §enew quest§r §luid objectives rewards tags§r
+command.questlog.new.page.syntax=/questlog §enew page§r §luid§r
+command.questlog.new.questNode.syntax=/questlog §enew questNode§r §lpageUID nodeUID questUID x y parents tags§r
+command.questlog.new.pageNode.syntax=/questlog §enew pageNode§r §lpageUID nodeUID targetUID x y parents tags§r
+command.questlog.new.lineNode.syntax=/questlog §enew lineNode§r §lpageUID nodeUID x y x2 y2 parents tags§r
+
+command.questlog.delete=Deletes entries.
+command.questlog.delete.syntax=/questlog §edelete§r §lentryType [pageUID] uid§r
+
+command.questlog.delete.quest.syntax=/questlog §edelete quest§r §luid§r
+command.questlog.delete.page.syntax=/questlog §edelete page§r §luid§r
+command.questlog.delete.questNode.syntax=/questlog §edelete questNode§r §lpageUID nodeUID§r
+command.questlog.delete.pageNode.syntax=/questlog §edelete pageNode§r §lpageUID nodeUID§r
+command.questlog.delete.lineNode.syntax=/questlog §edelete lineNode§r §lpageUID nodeUID§r
+
+command.questlog.list=Lists and filters entries.
+command.questlog.list.syntax=/questlog §elist§r §lentryType [pattern]§r
+
+command.questlog.list.quest.syntax=/questlog §elist quests§r §l[pattern]§r
+command.questlog.list.page.syntax=/questlog §elist pages§r §l[pattern]§r
+command.questlog.list.questNode.syntax=/questlog §elist questNodes§r §lpageUID§r §l[pattern]§r
+command.questlog.list.pageNode.syntax=/questlog §elist pageNodes§r §lpageUID§r §l[pattern]§r
+command.questlog.list.lineNode.syntax=/questlog §elist lineNodes§r §lpageUID§r §l[pattern]§r
+
+command.questlog.edit=Edits entry properties.
+command.questlog.edit.syntax=/questlog §eedit§r §lentryType property [pageUID] uid §lnewValue§r
+
+command.questlog.edit.quest.syntax=/questlog §eedit quest§r §lproperty newValue§r
+command.questlog.edit.page.syntax=/questlog §eedit page§r §lproperty newValue§r
+command.questlog.edit.questNode.syntax=/questlog §eedit questNode§r §lproperty pageUID nodeUID newValue§r
+command.questlog.edit.pageNode.syntax=/questlog §eedit pageNode§r §lproperty pageUID nodeUID newValue§r
+command.questlog.edit.lineNode.syntax=/questlog §eedit lineNode§r §lproperty pageUID nodeUID newValue§r
+
+command.questlog.track=Handles quest tracking.
+command.questlog.track.syntax=/questlog §etrack§r §l[questUID] [player]§r
+
+command.questlog.get=Displays entry information.
+command.questlog.get.syntax=/questlog §eget§r §lentryType [pageUID] uid§r
+
+command.questlog.get.quest.syntax=/questlog §eget quest§r §luid§r
+command.questlog.get.page.syntax=/questlog §eget page§r §luid§r
+command.questlog.get.questNode.syntax=/questlog §eget questNode§r §lpageUID uid§r
+command.questlog.get.pageNode.syntax=/questlog §eget pageNode§r §lpageUID uid§r
+command.questlog.get.lineNode.syntax=/questlog §eget lineNode§r §lpageUID uid§r
+
+command.questlog.quest=Add or remove quests from players.
+command.questlog.quest.syntax=/questlog §equest§r §loperation player questUID§r
+
+command.questlog.score=Manipulates player quest scores.
+command.questlog.score.syntax=/questlog §escore§r §loperation scoreUID [player] [amount]§r
+
+command.questlog.score.mod.syntax=/questlog §escore mod§r §lscoreUID player amount§r
+command.questlog.score.delete.syntax=/questlog §escore delete§r §lscoreUID player§r
+command.questlog.score.get.syntax=/questlog §escore get§r §l[scoreUID] player§r
+
+command.questlog.collect=Manipulates player collectible ownership.
+command.questlog.collect.syntax=/questlog §ecollect§r §loperation [collectible] [player]§r
+
+command.questlog.collect.list.syntax=/questlog §ecollect list§r §lplayer§r
+command.questlog.collect.has.syntax=/questlog §ecollect has§r §lcollectible player§r
+command.questlog.collect.add.syntax=/questlog §ecollect add§r §lcollectible player§r
+command.questlog.collect.remove.syntax=/questlog §ecollect remove§r §lcollectible player§r
+
+objective.questlog.kill=Kill
+objective.questlog.collect=Collect
