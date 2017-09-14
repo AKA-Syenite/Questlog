@@ -5,7 +5,6 @@ import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.SidedProxy
 import net.minecraftforge.fml.common.event.*
 import org.apache.logging.log4j.Logger
-import shukaro.questlog.data.Node
 import shukaro.questlog.sided.CommonProxy
 
 @Mod(modid = Questlog.MODID, modLanguageAdapter = "net.shadowfacts.forgelin.KotlinAdapter", useMetadata = true)
@@ -18,8 +17,6 @@ object Questlog {
 
     @SidedProxy(clientSide = "shukaro.questlog.sided.ClientProxy", serverSide = "shukaro.questlog.sided.ServerProxy")
     lateinit var proxy: CommonProxy
-
-    var questNodes: HashSet<Node> = HashSet()
 
     @Mod.EventHandler
     fun serverStarting(event: FMLServerStartingEvent) = proxy.serverStarting(event)

@@ -1,3 +1,5 @@
 package shukaro.questlog.data
 
-interface IReward {}
+interface IReward {
+    val unlocalizedName: String
+}

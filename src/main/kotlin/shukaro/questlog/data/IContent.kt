@@ -1,3 +1,5 @@
 package shukaro.questlog.data
 
-interface IContent {}
+interface IContent {
+    val unlocalizedName: String
+}

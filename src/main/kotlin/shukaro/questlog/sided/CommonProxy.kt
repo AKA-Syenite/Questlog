@@ -6,8 +6,8 @@ import shukaro.questlog.Config
 import shukaro.questlog.Questlog
 
 open class CommonProxy {
+
     fun serverStarting(event: FMLServerStartingEvent){}
-    fun init(event: FMLInitializationEvent){}
     fun postInit(event: FMLPostInitializationEvent){}
     fun imcRequest(event: FMLInterModComms){}
 
@@ -15,5 +15,9 @@ open class CommonProxy {
         Questlog.logger = event.modLog
         Questlog.config = Configuration(event.suggestedConfigurationFile)
         Config.readConfig()
+    }
+
+    fun init(event: FMLInitializationEvent) {
+
     }
 }

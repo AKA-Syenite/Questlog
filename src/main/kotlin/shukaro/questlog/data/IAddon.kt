@@ -1,3 +1,5 @@
 package shukaro.questlog.data
 
-interface IAddon {}
+interface IAddon {
+    val unlocalizedName: String
+}
