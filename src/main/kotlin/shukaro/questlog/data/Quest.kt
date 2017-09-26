@@ -10,11 +10,11 @@ data class Quest(
 
         override val writeToNBT: () -> NBTTagCompound = {
             var nbt: NBTTagCompound = NBTTagCompound()
-            nbt.let { nodes.forEach { node -> it.setInteger(node.key, node.value) } }
+            //nbt.let { nodes.forEach { node -> it.setInteger(node.key, node.value) } }
             nbt
         },
 
-        override val readFromNBT: () -> Page = {
-
+        override val readFromNBT: () -> Int = {
+            0
         }
 ): IContent

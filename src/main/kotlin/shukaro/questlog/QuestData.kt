@@ -33,9 +33,9 @@ object QuestData: WorldSavedData(Questlog.MODID + "_QuestData") {
             nodeData.setString("unlocalizedName", node.unlocalizedName)
             nodeData.setString("unlocalizedText", node.unlocalizedText)
             var prerequisites: NBTTagList = NBTTagList()
-            for (prereqNode in node.prerequisites) prerequisites.appendTag(NBTTagString(prereqNode.unlocalizedName))
+            //for (prereqNode in node.prerequisites) prerequisites.appendTag(NBTTagString(prereqNode.unlocalizedName))
             nodeData.setTag("prerequisites", prerequisites)
-            nodeData.setString("content", node.content.unlocalizedName)
+            //nodeData.setString("content", node.content.unlocalizedName)
             var addons: NBTTagList = NBTTagList()
             for (addon in node.addons) addons.appendTag(NBTTagString(addon.unlocalizedName))
             nodeData.setTag("addons", addons)
@@ -52,12 +52,12 @@ object QuestData: WorldSavedData(Questlog.MODID + "_QuestData") {
             val nodeTag: NBTTagCompound = questlogData.getCompoundTagAt(i)
             val prereqTag: NBTTagList = nodeTag.getTagList("prerequisites", 8)
             val addonTag: NBTTagList = nodeTag.getTagList("addons", 8)
-            var node: Node = Node(
+            /*var node: Node = Node(
                     unlocalizedName = nodeTag.getString("unlocalizedName"),
                     unlocalizedText = nodeTag.getString("unlocalizedText"),
-                    prerequisites = prereqTag.map { it -> (it as NBTTagString).string },
-                    content = IContent()
-            )
+                    prerequisites = prereqTag.map { it -> (it as NBTTagString).string }
+                    //content = IContent()
+            )*/
         }
     }
 }
